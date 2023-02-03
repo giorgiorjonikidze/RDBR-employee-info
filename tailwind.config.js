@@ -6,6 +6,7 @@ module.exports = {
     colors: {
       red_error: "#E52F2F",
       red_font: "#F93B1D",
+      dark_font: "#1A1A1A",
       green: "#98E37E",
       grey: "#BCBCBC",
       purple: "#6B40E3",
