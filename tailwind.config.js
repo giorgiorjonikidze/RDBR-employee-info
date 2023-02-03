@@ -9,8 +9,16 @@ module.exports = {
       green: "#98E37E",
       grey: "#BCBCBC",
       purple: "#6B40E3",
-      dark: "#2E2E2E"
+      dark: "#2E2E2E",
+      white: "#ffffff",
+      black: "#000000"
     },
+    fontSize: {
+      sm: "14px",
+      md: "16px", 
+      xl: "18px",
+      xxl: "24px"
+    }
     
   },
   plugins: [],
