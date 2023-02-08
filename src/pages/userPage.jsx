@@ -1,35 +1,96 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import useFormPersist from "react-hook-form-persist";
 import { useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+
+import Resume from "../components/resume";
 
 import backArrow from "../assets/images/back-arrow.svg";
 import emailIcon from "../assets/images/icon-email.svg";
 import phoneIcon from "../assets/images/icon-phone.svg";
+import errorIcon from "../assets/images/icon-error.svg";
+import successIcon from "../assets/images/icon-success.svg";
+import { resumeActions } from "./../store/store";
 
 const UserPage = () => {
+  const [image, setImage] = useState(null);
+  const [imageError, setImageError] = useState(false);
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    setImageError(true);
+
+    if (file) {
+      reader.readAsDataURL(file);
+      reader.onloadend = () => {
+        setImage(reader.result);
+        localStorage.setItem("image", reader.result);
+      };
+    }
+  };
+
+  const retrieveImageFromLocalStorage = () => {
+    const imageFromLocalStorage = localStorage.getItem("image");
+    if (imageFromLocalStorage) {
+      setImage(imageFromLocalStorage);
+    }
+  };
+
   const {
     register,
     handleSubmit,
     watch,
+    trigger,
     setValue,
-    formState: { errors },
+    formState: { dirtyFields, errors },
   } = useForm();
 
-  useFormPersist("storageKey", {
+  const [dirtyInputs, setDirtyInputs] = useState(dirtyFields);
+
+  useFormPersist("user info", {
     watch,
     setValue,
     storage: window.localStorage,
   });
 
-  const onSubmit = (data) => {
-    console.log("form sumbited", data);
-  };
-  const onError = (errors) => {
-    console.log(" form errors", errors);
-  };
   const watchForm = watch();
-  console.log(watchForm);
+
+
+  const onSubmit = (data) => {
+    // console.log("form sumbited", data);
+    dispatch(resumeActions.updateData(data));
+    dispatch(resumeActions.updateImage(image));
+    navigate("/experience");
+  };
+  const onError = ( data) => {
+    console.log(" form errors",  data);
+    setDirtyInputs({
+      name: true,
+      surname: true,
+      file: true,
+      email: true,
+      phone: true
+    })
+    setValue("name", watchForm.name, { shouldDirty: true });
+    setValue("surname", watchForm.surname, { shouldDirty: true });
+    setValue("email", watchForm.email, { shouldDirty: true });
+    setValue("phone", watchForm.phone, { shouldDirty: true });
+    setValue("file", watchForm.file, { shouldDirty: true });
+  };
+
+
+  // useEffect(() => {
+  //   trigger();
+  // }, [errors]);
+
+  const inputTriggerHandler = () => {
+    trigger();
+  };
 
   return (
     <div className="mt-[45px] ml-[48px] flex">
@@ -44,71 +105,260 @@ const UserPage = () => {
           <form onSubmit={handleSubmit(onSubmit, onError)}>
             <div className="flex gap-[56px] mt-[77px]">
               {/* სახელი ///////////////////  */}
-              <div className="flex flex-col">
-                <label className="font-bold mb-[8px]">სახელი</label>
+              <div
+                className="flex flex-col relative"
+                onChange={inputTriggerHandler}
+              >
+                <label
+                  className="font-bold mb-[8px]"
+                  style={
+                    dirtyFields.name
+                      ? errors.name
+                        ? { color: "#E52F2F" }
+                        : { color: "#98E37E" }
+                      : { color: "#000000" }
+                  }
+                >
+                  სახელი
+                </label>
                 <input
-                  {...register("name", { required: true })}
+                  {...register("name", {
+                    required: true,
+                    pattern: /^[ა-ჰ]{2,}$/,
+                  })}
+                  //   onChange={inputTriggerHandler}
                   className="w-[371px] h-[48px] px-[16px] py-[13px] border-grey border-[1px] border-solid rounded-[4px] focus:outline-[2px] focus:outline-grey  mb-[8px]"
                   type="text"
                   placeholder="ანზორ"
+                  style={
+                    dirtyFields.name
+                      ? errors.name
+                        ? { borderColor: "#E52F2F" }
+                        : { borderColor: "#98E37E" }
+                      : { borderColor: "#BCBCBC" }
+                  }
                 />
                 <p className="font-light text-sm text-dark">
                   მინიმუმ 2 ასო, ქართული ასოები
                 </p>
+                {dirtyFields.name ? (
+                  errors.name ? (
+                    <img
+                      src={errorIcon}
+                      className="w-[18px] h-[18px] absolute top-[47px] right-[-27px]"
+                    />
+                  ) : (
+                    <img
+                      src={successIcon}
+                      className="w-[18px] h-[18px] absolute top-[47px] right-[13px]"
+                    />
+                  )
+                ) : (
+                  <div></div>
+                )}
               </div>
               {/* გვარი /////////////////////////// */}
-              <div className="flex flex-col">
-                <label className="font-bold mb-[8px]">გვარი</label>
+              <div
+                className="flex flex-col relative"
+                onChange={inputTriggerHandler}
+              >
+                <label
+                  className="font-bold mb-[8px]"
+                  style={
+                    dirtyFields.surname
+                      ? errors.surname
+                        ? { color: "#E52F2F" }
+                        : { color: "#98E37E" }
+                      : { color: "#000000" }
+                  }
+                >
+                  გვარი
+                </label>
                 <input
-                  {...register("surname", { required: true })}
+                  {...register("surname", {
+                    required: true,
+                    pattern: /^[ა-ჰ]{2,}$/,
+                  })}
                   className="w-[371px] h-[48px] px-[16px] py-[13px] border-grey border-[1px] border-solid rounded-[4px] focus:outline-[2px] focus:outline-grey  mb-[8px]"
                   type="text"
                   placeholder="მელაძე"
+                  style={
+                    dirtyFields.surname
+                      ? errors.surname
+                        ? { borderColor: "#E52F2F" }
+                        : { borderColor: "#98E37E" }
+                      : { borderColor: "#BCBCBC" }
+                  }
                 />
                 <p className="font-light text-sm text-dark">
                   მინიმუმ 2 ასო, ქართული ასოები
                 </p>
+                {dirtyFields.surname ? (
+                  errors.surname ? (
+                    <img
+                      src={errorIcon}
+                      className="w-[18px] h-[18px] absolute top-[47px] right-[-27px]"
+                    />
+                  ) : (
+                    <img
+                      src={successIcon}
+                      className="w-[18px] h-[18px] absolute top-[47px] right-[13px]"
+                    />
+                  )
+                ) : (
+                  <div></div>
+                )}
               </div>
             </div>
             {/* ფაილის ატვირთვა //////////////////////////  */}
-            <div className="mt-[46px]">
-              <input {...register("file", { required: true })} type="file" />
+            <div
+              className="mt-[46px] flex gap-[19px] items-center"
+              onChange={inputTriggerHandler}
+            >
+              <p className="font-bold text-xl text-dark_font">
+                პირადი ფოტოს ატვირთვა
+              </p>
+              <label
+                htmlFor="file-input"
+                className="w-[107px] h-[27px] cursor-pointer bg-[#0E80BF] text-white text-[14px] rounded-[4px] flex justify-center pt-[2px]"
+              >
+                ატვირთვა
+              </label>
+              <input
+                {...register("file")}
+                className="hidden"
+                type="file"
+                id="file-input"
+                accept="image/*"
+                onChange={handleFileChange}
+                ref={retrieveImageFromLocalStorage}
+              />
+              {dirtyFields.file ? (
+                !imageError ? (
+                  <img src={errorIcon} className="w-[18px] h-[18px] " />
+                ) : (
+                  <img src={successIcon} className="w-[18px] h-[18px] " />
+                )
+              ) : (
+                <div></div>
+              )}
             </div>
-            <div className="flex flex-col mt-[46px]">
+            <div
+              className="flex flex-col mt-[46px]"
+              onChange={inputTriggerHandler}
+            >
               <label className="font-bold mb-[8px]">
                 ჩემ შესახებ (არასავალდებულო)
               </label>
               <textarea
-                {...register("userInfo", { required: true })}
-                className="border-[1px] border-solid border-grey focus:outline-[2px] focus:outline-grey rounded-[4px]"
+                {...register("userInfo")}
+                className="px-[16px] border-[1px] border-solid border-grey focus:outline-[2px] focus:outline-grey rounded-[4px] "
                 cols="30"
                 rows="3"
               ></textarea>
             </div>
             {/* ელფოსტა ///////////////////////////////////////////// */}
-            <div className="flex flex-col mt-[17px]">
-              <label className="font-bold mb-[8px]">ელ.ფოსტა</label>
+            <div
+              className="flex flex-col mt-[17px] relative"
+              onChange={inputTriggerHandler}
+            >
+              <label
+                className="font-bold mb-[8px]"
+                style={
+                  dirtyFields.email
+                    ? errors.email
+                      ? { color: "#E52F2F" }
+                      : { color: "#98E37E" }
+                    : { color: "#000000" }
+                }
+              >
+                ელ.ფოსტა
+              </label>
               <input
-                {...register("email", { required: true })}
+                {...register("email", {
+                  required: true,
+                  pattern: /.*@redberry.ge$/,
+                })}
                 className="h-[48px] px-[16px] py-[13px] border-grey border-[1px] border-solid rounded-[4px] focus:outline-[2px] focus:outline-grey mb-[8px]"
                 type="text"
                 placeholder="anzorr666@redberry.ge"
+                style={
+                  dirtyFields.email
+                    ? errors.email
+                      ? { borderColor: "#E52F2F" }
+                      : { borderColor: "#98E37E" }
+                    : { borderColor: "#BCBCBC" }
+                }
               />
               <p className="font-light text-sm text-dark">
                 უნდა მთავრდებოდეს @redberry.ge-ით
               </p>
+              {dirtyFields.email ? (
+                errors.email ? (
+                  <img
+                    src={errorIcon}
+                    className="w-[18px] h-[18px] absolute top-[47px] right-[-27px]"
+                  />
+                ) : (
+                  <img
+                    src={successIcon}
+                    className="w-[18px] h-[18px] absolute top-[47px] right-[13px]"
+                  />
+                )
+              ) : (
+                <div></div>
+              )}
             </div>
-            <div className="flex flex-col mt-[13px]">
-              <label className="font-bold mb-[8px]">მობილურის ნომერი</label>
+            <div
+              className="flex flex-col mt-[13px] relative"
+              onChange={inputTriggerHandler}
+            >
+              <label
+                className="font-bold mb-[8px]"
+                style={
+                  dirtyFields.phone
+                    ? errors.phone
+                      ? { color: "#E52F2F" }
+                      : { color: "#98E37E" }
+                    : { color: "#000000" }
+                }
+              >
+                მობილურის ნომერი
+              </label>
               <input
-                {...register("phone", { required: true })}
+                {...register("phone", {
+                  required: true,
+                  pattern: /^\+995[0-9]{9}$/,
+                })}
                 className="h-[48px] px-[16px] py-[13px] border-grey border-[1px] border-solid rounded-[4px] focus:outline-[2px] focus:outline-grey  mb-[8px]"
                 type="text"
                 placeholder="+995 551 12 34 56"
+                style={
+                  dirtyFields.phone
+                    ? errors.phone
+                      ? { borderColor: "#E52F2F" }
+                      : { borderColor: "#98E37E" }
+                    : { borderColor: "#BCBCBC" }
+                }
               />
               <p className="font-light text-sm text-dark">
                 უნდა აკმაყოფილებდეს ქართული მობილურის ნომრის ფორმატს
               </p>
+              {dirtyFields.phone ? (
+                errors.phone ? (
+                  <img
+                    src={errorIcon}
+                    className="w-[18px] h-[18px] absolute top-[47px] right-[-27px]"
+                  />
+                ) : (
+                  <img
+                    src={successIcon}
+                    className="w-[18px] h-[18px] absolute top-[47px] right-[13px]"
+                  />
+                )
+              ) : (
+                <div></div>
+              )}
             </div>
             <button
               type="submit"
@@ -119,40 +369,7 @@ const UserPage = () => {
           </form>
         </div>
       </section>
-      <section className="ml-[200px]">
-        <div className="w-[423px] flex flex-col">
-          {/* სახელი გვარი ///////////////////////// */}
-          <div className="flex gap-[20px] mb-[17px]">
-            <p className="font-bold text-red_font text-[34px] ">
-              {watchForm.name}
-            </p>
-            <p className="font-bold text-red_font text-[34px] ">
-              {watchForm.surname}
-            </p>
-          </div>
-          {/* იმეილი ///////////////////////////  */}
-          <div className="flex items-center gap-[10px] mb-[10px]">
-            <img src={emailIcon} />
-            <p className="text-xl text-dark_font ">{watchForm.email}</p>
-          </div>
-          {/* ტელეფონი ////////////////////////// */}
-          <div className="flex items-center gap-[10px] mb-[34px]">
-            <img src={phoneIcon} />
-            <p className="text-xl text-dark_font">
-              {watchForm.phone}
-            </p>
-          </div>
-          {/* გამოცდილება/////////////  */}
-          {watchForm.userInfo && (
-            <div className="flex flex-col">
-              <p className="font-bold text-xl text-red_font mb-[15px]">
-                ᲩᲔᲛ ᲨᲔᲡᲐᲮᲔᲑ
-              </p>
-              <p>{watchForm.userInfo}</p>
-            </div>
-          )}
-        </div>
-      </section>
+      <Resume watchForm={watchForm} image={image} />
     </div>
   );
 };
