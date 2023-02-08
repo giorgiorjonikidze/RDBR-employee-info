@@ -3,33 +3,39 @@ import { createSlice, configureStore } from "@reduxjs/toolkit";
 const resumeSlice = createSlice({
   name: "resume",
   initialState: {
-    image: null,
-    name: null,
-    email: null,
-    phone_number: null,
-    description: null,
-    experiences: [],
-    educations: [],
-    about_me: null,
+    experienceFormCount: [1],
+    eduCationFormCount: [1],
   },
   reducers: {
-    updateData(state, action) {
-      state.name = action.name;
-      state.email = action.email;
-      state.phone_number = action.phone_number;
-      state.description = action.description;
-      console.log(action.payload);
+    addToExperience(state) {
+      state.experienceFormCount.push(1);
     },
-    updateImage(state, action) {
-      state.image = action.payload;
-    //   console.log(action.payload);
+    addToEducation(state) {
+      state.eduCationFormCount.push(1);
     },
   },
 });
 
+const persistedState = localStorage.getItem("resume")
+  ? JSON.parse(localStorage.getItem("resume"))
+  : { experienceFormCount: [1], eduCationFormCount: [1] };
+
 const store = configureStore({
   reducer: resumeSlice.reducer,
+  preloadedState: { ...resumeSlice.initialState, ...persistedState },
+  enhancers: [
+    (createStore) => (reducer, preloadedState, enhancer) => {
+      const store = createStore(reducer, preloadedState, enhancer);
+      store.subscribe(() => {
+        const state = store.getState();
+        localStorage.setItem("resume", JSON.stringify(state));
+      });
+      return store;
+    },
+  ],
 });
+
+console.log(store.getState());
 
 export const resumeActions = resumeSlice.actions;
 
