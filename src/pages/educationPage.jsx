@@ -22,7 +22,17 @@ const Experience = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const [selectData, setSelectData] = useState([]);
+  const [fetchedSelectData, setFetchedSelectData] = useState([]);
+  const [selected, setSelected] = useState("");
+  const [invalidSelect, setInvalidSelect] = useState(true);
+  const [selectIsTuched, setSelectIsTuched] = useState(false);
+
+  const validateSelect = () => {
+    if (selected === "") {
+      return true;
+    }
+    return false;
+  };
 
   const {
     register,
@@ -41,14 +51,22 @@ const Experience = () => {
 
   const onSubmit = (data) => {
     console.log("form sumbited", data);
+    const selectError = validateSelect();
+    console.log("select error", selectError);
+    setSelectIsTuched(true);
   };
   const onError = (errors) => {
     console.log(" form errors", errors);
     setValue("educationDescription", watchForm.educationDescription, {
       shouldDirty: true,
     });
-    setValue("institute_due_date", watchForm.institute_due, { shouldDirty: true });
+    setValue("institute_due_date", watchForm.institute_due, {
+      shouldDirty: true,
+    });
     setValue("institute", watchForm.institute, { shouldDirty: true });
+    const selectError = validateSelect();
+    console.log("select error", selectError);
+    setSelectIsTuched(true);
   };
   const watchForm = watch();
 
@@ -72,7 +90,7 @@ const Experience = () => {
   useEffect(() => {
     axios(degreeUrl)
       .then((response) =>
-        setSelectData(
+        setFetchedSelectData(
           response.data.map((item) => (
             <option key={item.title} value={item.title}>
               {item.title}
@@ -84,7 +102,8 @@ const Experience = () => {
   }, []);
 
   const selectChangeHandler = (e) => {
-    console.log(e.target.value);
+    setSelected(e.target.value);
+    setInvalidSelect(false);
   };
 
   const inputTriggerHandler = () => {
@@ -161,17 +180,41 @@ const Experience = () => {
                 </div>
 
                 {/* ხარისხი  /////////////////////////////////// */}
-                <div className="flex gap-[56px] mt-[77px]">
+                <div className="flex gap-[56px] mt-[77px] ">
                   {/* select ///////////////////////////////////////////// */}
-                  <select
-                    onChange={selectChangeHandler}
-                    className="w-[371px] h-[48px] px-[16px] py-[13px] border-grey border-[1px] border-solid rounded-[4px] focus:outline-[2px] focus:outline-grey  mb-[8px] mt-[30px]"
-                  >
-                    <option hidden className="opacity-60 text-xxl">
-                      აირჩიეთ ხარისხი
-                    </option>
-                    {selectData}
-                  </select>
+                  <div className="relative">
+                    <select
+                      onChange={selectChangeHandler}
+                      className="w-[371px] h-[48px] px-[16px] py-[13px] border-grey border-[1px] border-solid rounded-[4px] focus:outline-[2px] focus:outline-grey  mb-[8px] mt-[30px] "
+                      style={
+                        selectIsTuched
+                          ? invalidSelect
+                            ? { borderColor: "#E52F2F" }
+                            : { borderColor: "#98E37E" }
+                          : { borderColor: "#BCBCBC" }
+                      }
+                    >
+                      <option hidden className="opacity-60 text-xxl">
+                        აირჩიეთ ხარისხი
+                      </option>
+                      {fetchedSelectData}
+                    </select>
+                    {selectIsTuched ? (
+                      invalidSelect ? (
+                        <img
+                          src={errorIcon}
+                          className="w-[18px] h-[18px] absolute top-[47px] right-[-30px]"
+                        />
+                      ) : (
+                        <img
+                          src={successIcon}
+                          className="w-[18px] h-[18px] absolute top-[47px] right-[-30px]"
+                        />
+                      )
+                    ) : (
+                      <div></div>
+                    )}
+                  </div>
                   {/* დამტავრების რიცხცი /////////////////////////// */}
                   <div
                     className="flex flex-col relative"
