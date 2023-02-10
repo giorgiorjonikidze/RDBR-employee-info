@@ -6,17 +6,27 @@ import { useNavigate } from "react-router-dom";
 import backArrow from "../assets/images/back-arrow.svg";
 import emailIcon from "../assets/images/icon-email.svg";
 import phoneIcon from "../assets/images/icon-phone.svg";
+import errorIcon from "../assets/images/icon-error.svg";
+import successIcon from "../assets/images/icon-success.svg";
+
 import Resume from "../components/resume";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { resumeActions } from "./../store/store";
+
 
 const Experience = () => {
-  const userInfoData = useSelector((state) => state);
+  const experienceCount = useSelector((state) => state.experienceFormCount);
+
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const {
     register,
     handleSubmit,
     watch,
     setValue,
-    formState: {  dirtyFields, errors },
+    trigger,
+    formState: { dirtyFields, errors },
   } = useForm();
 
   useFormPersist("user info", {
@@ -25,32 +35,55 @@ const Experience = () => {
     storage: window.localStorage,
   });
 
+  const [dirtyInputs, setDirtyInputs] = useState(dirtyFields);
+
+  const watchForm = watch();
 
   const onSubmit = (data) => {
     console.log("form sumbited", data);
+    // navigate("/education");
   };
   const onError = (errors) => {
     console.log(" form errors", errors);
+    setDirtyInputs({
+      position0: true,
+      finnish0: true,
+      start0: true,
+      employer0: true,
+      description0: true,
+    });
+    setValue("position0", watchForm.position0, { shouldDirty: true });
+    setValue("finnish0", watchForm.finnish0, { shouldDirty: true });
+    setValue("start0", watchForm.start0, { shouldDirty: true });
+    setValue("employer0", watchForm.employer0, { shouldDirty: true });
+    setValue("description0", watchForm.description0, { shouldDirty: true });
   };
-  const watchForm = watch();
 
-  const [forms, setForms] = useState([1]);
+  // const [forms, setForms] = useState([1]);
   const addForm = () => {
-    setForms([...forms, 1]);
+    // setForms([...forms, 1]);
+    dispatch(resumeActions.addToExperience());
   };
 
-  useEffect(() => {
-    const formsLength = JSON.parse(localStorage.getItem("forms length"));
-    if (formsLength) {
-      setForms(formsLength);
-    }
-  }, []);
+  const inputTriggerHandler = () => {
+    trigger();
+    console.log("trigger");
+  };
 
-  useEffect(() => {
-    setTimeout(() => {
-      localStorage.setItem("forms length", JSON.stringify(forms));
-    }, 500);
-  }, [forms]);
+  // useEffect(() => {
+  //   const formsLength = JSON.parse(localStorage.getItem("forms length"));
+  //   if (formsLength) {
+  //     setForms(formsLength);
+  //   }
+  // }, []);
+
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     localStorage.setItem("forms length", JSON.stringify(forms));
+  //   }, 500);
+  // }, [forms]);
+
+  
 
   return (
     <div className="mt-[45px] ml-[48px] flex">
@@ -64,45 +97,129 @@ const Experience = () => {
           </div>
           <form onSubmit={handleSubmit(onSubmit, onError)}>
             {/* map /////////////////////////////////////////////////////////// */}
-            {forms?.map((form, index) => (
+            {experienceCount?.map((form, index) => (
               <div key={index} className="mt-[60px]">
                 {/* თანამდებობა /////////////////////// */}
-                <div className="flex flex-col mt-[13px]">
-                  <label className="font-bold mb-[8px]">თანამდებობა</label>
+                <div
+                  onChange={inputTriggerHandler}
+                  className="flex flex-col mt-[13px] relative"
+                >
+                  <label
+                    className="font-bold mb-[8px]"
+                    style={
+                      dirtyFields[`position${index}`]
+                        ? errors[`position${index}`]
+                          ? { color: "#E52F2F" }
+                          : { color: "#98E37E" }
+                        : { color: "#000000" }
+                    }
+                  >
+                    თანამდებობა
+                  </label>
                   <input
                     {...register(`position${index}`, {
                       required: true,
-                      pattrern: /^[ა-ჰ]{2,}$/,
+                      min: 2,
                     })}
                     className="h-[48px] px-[16px] py-[13px] border-grey border-[1px] border-solid rounded-[4px] focus:outline-[2px] focus:outline-grey  mb-[8px]"
                     type="text"
+                    style={
+                      dirtyFields[`position${index}`]
+                        ? errors[`position${index}`]
+                          ? { borderColor: "#E52F2F" }
+                          : { borderColor: "#98E37E" }
+                        : { borderColor: "#BCBCBC" }
+                    }
                     placeholder="დეველოპერი, დიზაინერი, ა.შ."
                   />
                   <p className="font-light text-sm text-dark">
                     მინიმუმ 2 სიმბოლო
                   </p>
+                  {dirtyFields[`position${index}`] ? (
+                    errors[`position${index}`] ? (
+                      <img
+                        src={errorIcon}
+                        className="w-[18px] h-[18px] absolute top-[47px] right-[-27px]"
+                      />
+                    ) : (
+                      <img
+                        src={successIcon}
+                        className="w-[18px] h-[18px] absolute top-[47px] right-[13px]"
+                      />
+                    )
+                  ) : (
+                    <div></div>
+                  )}
                 </div>
                 {/* დამსაქმებელი ///////////////////////////////////////////// */}
-                <div className="flex flex-col mt-[17px]">
-                  <label className="font-bold mb-[8px]">დამსაქმებელი</label>
+                <div
+                  onChange={inputTriggerHandler}
+                  className="flex flex-col mt-[17px] relative"
+                >
+                  <label
+                    className="font-bold mb-[8px]"
+                    style={
+                      dirtyFields[`employer${index}`]
+                        ? errors[`employer${index}`]
+                          ? { color: "#E52F2F" }
+                          : { color: "#98E37E" }
+                        : { color: "#000000" }
+                    }
+                  >
+                    დამსაქმებელი
+                  </label>
                   <input
                     {...register(`employer${index}`, {
                       required: true,
-                      pattrern: /^[ა-ჰ]{2,}$/,
+                      min: 2,
                     })}
                     className="h-[48px] px-[16px] py-[13px] border-grey border-[1px] border-solid rounded-[4px] focus:outline-[2px] focus:outline-grey mb-[8px]"
+                    style={
+                      dirtyFields[`employer${index}`]
+                        ? errors[`employer${index}`]
+                          ? { borderColor: "#E52F2F" }
+                          : { borderColor: "#98E37E" }
+                        : { borderColor: "#BCBCBC" }
+                    }
                     type="text"
                     placeholder="დამსაქმებელი"
                   />
                   <p className="font-light text-sm text-dark">
                     მინიმუმ 2 სიმბოლო
                   </p>
+                  {dirtyFields[`employer${index}`] ? (
+                    errors[`employer${index}`] ? (
+                      <img
+                        src={errorIcon}
+                        className="w-[18px] h-[18px] absolute top-[47px] right-[-27px]"
+                      />
+                    ) : (
+                      <img
+                        src={successIcon}
+                        className="w-[18px] h-[18px] absolute top-[47px] right-[13px]"
+                      />
+                    )
+                  ) : (
+                    <div></div>
+                  )}
                 </div>
                 {/* თარიღები  /////////////////////////////////// */}
                 <div className="flex gap-[56px] mt-[77px]">
                   {/* დაწყების რიცხვი ///////////////////  */}
-                  <div className="flex flex-col">
-                    <label className="font-bold mb-[8px]">
+                  <div
+                    onChange={inputTriggerHandler}
+                    className="flex flex-col relative"
+                  >
+                    <label
+                      className="font-bold mb-[8px]"
+                      style={
+                        dirtyFields[`start${index}`]
+                          ? errors[`start${index}`]
+                            ? { color: "#E52F2F" }
+                            : { color: "#98E37E" }
+                          : { color: "#000000" }
+                      }
+                    >
                       დაწყების რიცხვი
                     </label>
                     <input
@@ -110,35 +227,127 @@ const Experience = () => {
                         required: true,
                       })}
                       className="w-[371px] h-[48px] px-[16px] py-[13px] border-grey border-[1px] border-solid rounded-[4px] focus:outline-[2px] focus:outline-grey  mb-[8px]"
+                      style={
+                        dirtyFields[`start${index}`]
+                          ? errors[`start${index}`]
+                            ? { borderColor: "#E52F2F" }
+                            : { borderColor: "#98E37E" }
+                          : { borderColor: "#BCBCBC" }
+                      }
                       type="date"
                     />
+                    {dirtyFields[`start${index}`] ? (
+                      errors[`start${index}`] ? (
+                        <img
+                          src={errorIcon}
+                          className="w-[18px] h-[18px] absolute top-[47px] right-[-30px]"
+                        />
+                      ) : (
+                        <img
+                          src={successIcon}
+                          className="w-[18px] h-[18px] absolute top-[47px] right-[-30px]"
+                        />
+                      )
+                    ) : (
+                      <div></div>
+                    )}
                   </div>
                   {/* დამტავრების რიცხცი /////////////////////////// */}
-                  <div className="flex flex-col">
-                    <label className="font-bold mb-[8px]">
+                  <div
+                    onChange={inputTriggerHandler}
+                    className="flex flex-col relative"
+                  >
+                    <label
+                      className="font-bold mb-[8px]"
+                      style={
+                        dirtyFields[`finnish${index}`]
+                          ? errors[`finnish${index}`]
+                            ? { color: "#E52F2F" }
+                            : { color: "#98E37E" }
+                          : { color: "#000000" }
+                      }
+                    >
                       დამთავრების რიცხვი
                     </label>
                     <input
                       {...register(`finnish${index}`, {
-                        // required: true,
+                        required: true,
                       })}
                       className="w-[371px] h-[48px] px-[16px] py-[13px] border-grey border-[1px] border-solid rounded-[4px] focus:outline-[2px] focus:outline-grey  mb-[8px] "
+                      style={
+                        dirtyFields[`finnish${index}`]
+                          ? errors[`finnish${index}`]
+                            ? { borderColor: "#E52F2F" }
+                            : { borderColor: "#98E37E" }
+                          : { borderColor: "#BCBCBC" }
+                      }
                       type="date"
                     />
+                    {dirtyFields[`finnish${index}`] ? (
+                      errors[`finnish${index}`] ? (
+                        <img
+                          src={errorIcon}
+                          className="w-[18px] h-[18px] absolute top-[47px] right-[-30px]"
+                        />
+                      ) : (
+                        <img
+                          src={successIcon}
+                          className="w-[18px] h-[18px] absolute top-[47px] right-[-30px]"
+                        />
+                      )
+                    ) : (
+                      <div></div>
+                    )}
                   </div>
                 </div>
 
-                <div className="flex flex-col mt-[46px]">
-                  <label className="font-bold mb-[8px]">აღწერა</label>
+                <div
+                  onChange={inputTriggerHandler}
+                  className="flex flex-col mt-[46px] relative"
+                >
+                  <label
+                    className="font-bold mb-[8px]"
+                    style={
+                      dirtyFields[`description${index}`]
+                        ? errors[`description${index}`]
+                          ? { color: "#E52F2F" }
+                          : { color: "#98E37E" }
+                        : { color: "#000000" }
+                    }
+                  >
+                    აღწერა
+                  </label>
                   <textarea
                     {...register(`description${index}`, {
-                      // required: true,
+                      required: true,
                     })}
                     className="border-[1px] border-solid border-grey focus:outline-[2px] focus:outline-grey rounded-[4px] box-border px-[16px] py-[13px]"
+                    style={
+                      dirtyFields[`description${index}`]
+                        ? errors[`description${index}`]
+                          ? { borderColor: "#E52F2F" }
+                          : { borderColor: "#98E37E" }
+                        : { borderColor: "#BCBCBC" }
+                    }
                     cols="30"
                     rows="3"
                     placeholder="როლი თანამდებობაზე და ზოგადი აღწერა"
                   ></textarea>
+                  {dirtyFields[`description${index}`] ? (
+                    errors[`description${index}`] ? (
+                      <img
+                        src={errorIcon}
+                        className="w-[18px] h-[18px] absolute top-[47px] right-[-30px]"
+                      />
+                    ) : (
+                      <img
+                        src={successIcon}
+                        className="w-[18px] h-[18px] absolute top-[47px] right-[-30px]"
+                      />
+                    )
+                  ) : (
+                    <div></div>
+                  )}
                 </div>
                 <div className="w-[798px] h-[1px] bg-[#C1C1C1] mt-[55px]"></div>
               </div>
@@ -161,7 +370,7 @@ const Experience = () => {
           </form>
         </div>
       </section>
-      <Resume watchForm={watchForm} forms={forms} />
+      <Resume watchForm={watchForm} exForms={experienceCount} />
     </div>
   );
 };
