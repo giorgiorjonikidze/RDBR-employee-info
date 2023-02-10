@@ -104,6 +104,7 @@ const Experience = () => {
   const selectChangeHandler = (e) => {
     setSelected(e.target.value);
     setInvalidSelect(false);
+    setSelectIsTuched(true);
   };
 
   const inputTriggerHandler = () => {
