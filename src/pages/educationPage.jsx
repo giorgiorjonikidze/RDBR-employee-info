@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import useFormPersist from "react-hook-form-persist";
 import { useNavigate } from "react-router-dom";
@@ -6,14 +6,31 @@ import { useNavigate } from "react-router-dom";
 import backArrow from "../assets/images/back-arrow.svg";
 import emailIcon from "../assets/images/icon-email.svg";
 import phoneIcon from "../assets/images/icon-phone.svg";
+import errorIcon from "../assets/images/icon-error.svg";
+import successIcon from "../assets/images/icon-success.svg";
 
-const Education = () => {
+import Resume from "../components/resume";
+import { useSelector, useDispatch } from "react-redux";
+import axios from "axios";
+import { resumeActions } from "./../store/store";
+
+const Experience = () => {
+  const userInfoData = useSelector((state) => state);
+  const degreeUrl = "https://resume.redberryinternship.ge/api/degrees";
+  const educationFormCount = useSelector((state) => state.eduCationFormCount);
+
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const [selectData, setSelectData] = useState([]);
+
   const {
     register,
     handleSubmit,
     watch,
     setValue,
-    formState: { errors },
+    trigger,
+    formState: { dirtyFields, errors },
   } = useForm();
 
   useFormPersist("user info", {
@@ -27,12 +44,57 @@ const Education = () => {
   };
   const onError = (errors) => {
     console.log(" form errors", errors);
+    setValue("educationDescription", watchForm.educationDescription, {
+      shouldDirty: true,
+    });
+    setValue("schoolFinnish", watchForm.schoolFinnish, { shouldDirty: true });
+    setValue("school", watchForm.school, { shouldDirty: true });
   };
   const watchForm = watch();
-  console.log(watchForm);
+
+  const addForm = () => {
+    dispatch(resumeActions.addToEducation());
+  };
+
+  // useEffect(() => {
+  //   const formsLength = JSON.parse(localStorage.getItem("eduForms length"));
+  //   if (formsLength) {
+  //     setEduForms(formsLength);
+  //   }
+  // }, []);
+
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     localStorage.setItem("eduForms length", JSON.stringify(eduForms));
+  //   }, 500);
+  // }, [eduForms]);
+
+  useEffect(() => {
+    axios(degreeUrl)
+      .then((response) =>
+        setSelectData(
+          response.data.map((item) => (
+            <option key={item.title} value={item.title}>
+              {item.title}
+            </option>
+          ))
+        )
+      )
+      .catch((err) => console.log(err));
+  }, []);
+
+  const selectChangeHandler = (e) => {
+    console.log(e.target.value);
+  };
+
+  const inputTriggerHandler = () => {
+    console.log("input trigger");
+
+    trigger();
+  };
 
   return (
-    <div className="mt-[45px] ml-[48px]">
+    <div className="mt-[45px] ml-[48px] flex">
       {/* left section///////////  */}
       <section className="flex gap-[61px] mt-[]">
         <img className="self-start" src={backArrow} alt="" />
@@ -41,66 +103,183 @@ const Education = () => {
             <h1 className="font-bold text-xxl ">გამოცდილება</h1>
             <p className="text-[20px] text-[#1A1A1A]">2/3</p>
           </div>
-          <form>
-            {/* სასწავლებელი /////////////////////// */}
-            <div className="flex flex-col mt-[13px]">
-              <label className="font-bold mb-[8px]">სასწავლებელი</label>
-              <input
-                {...register("position", {
-                  required: true,
-                  pattrern: /^[ა-ჰ]{2,}$/,
-                })}
-                className="h-[48px] px-[16px] py-[13px] border-grey border-[1px] border-solid rounded-[4px] focus:outline-[2px] focus:outline-grey  mb-[8px]"
-                type="text"
-                placeholder="სასწავლებელი"
-              />
-              <p className="font-light text-sm text-dark">მინიმუმ 2 სიმბოლო</p>
-            </div>
-            
-            {/* თარიღები  /////////////////////////////////// */}
-            <div className="flex gap-[56px] mt-[77px]">
-              {/* ხარისხი ///////////////////  */}
-              <div className="flex flex-col">
-                <label className="font-bold mb-[8px]">ხარისხი</label>
-                <input
-                {...register("start", {
-                  required: true
-                })}
-                  className="w-[371px] h-[48px] px-[16px] py-[13px] border-grey border-[1px] border-solid rounded-[4px] focus:outline-[2px] focus:outline-grey  mb-[8px]"
-                  type="text"
-                />
-              </div>
-              {/* დამთავრების რიცხცი /////////////////////////// */}
-              <div className="flex flex-col">
-                <label className="font-bold mb-[8px]">დამთავრების რიცხვი</label>
-                <input
-                {...register("finnish", {
-                  required: true
-                })}
-                  className="w-[371px] h-[48px] px-[16px] py-[13px] border-grey border-[1px] border-solid rounded-[4px] focus:outline-[2px] focus:outline-grey  mb-[8px] "
-                  type="date"
-                />
-              </div>
-            </div>
-            {/* ფაილის ატვირთვა //////////////////////////  */}
+          <form onSubmit={handleSubmit(onSubmit, onError)}>
+            {/* map /////////////////////////////////////////////////////////// */}
+            {educationFormCount?.map((form, index) => (
+              <div key={index} className="mt-[60px]">
+                {/* სასწავლებელი /////////////////////// */}
+                <div
+                  className="flex flex-col mt-[13px] relative"
+                  onChange={inputTriggerHandler}
+                >
+                  <label
+                    className="font-bold mb-[8px]"
+                    style={
+                      dirtyFields[`school${index}`]
+                        ? errors[`school${index}`]
+                          ? { color: "#E52F2F" }
+                          : { color: "#98E37E" }
+                        : { color: "#000000" }
+                    }
+                  >
+                    სასწავლებელი
+                  </label>
+                  <input
+                    {...register(`school${index}`, {
+                      required: true,
+                      minLength: 2,
+                    })}
+                    className="h-[48px] px-[16px] py-[13px] border-grey border-[1px] border-solid rounded-[4px] focus:outline-[2px] focus:outline-grey  mb-[8px]"
+                    type="text"
+                    placeholder="სასწავლებელი"
+                    style={
+                      dirtyFields[`school${index}`]
+                        ? errors[`school${index}`]
+                          ? { borderColor: "#E52F2F" }
+                          : { borderColor: "#98E37E" }
+                        : { borderColor: "#BCBCBC" }
+                    }
+                  />
+                  <p className="font-light text-sm text-dark">
+                    მინიმუმ 2 სიმბოლო
+                  </p>
+                  {dirtyFields[`school${index}`] ? (
+                    errors[`school${index}`] ? (
+                      <img
+                        src={errorIcon}
+                        className="w-[18px] h-[18px] absolute top-[47px] right-[-27px]"
+                      />
+                    ) : (
+                      <img
+                        src={successIcon}
+                        className="w-[18px] h-[18px] absolute top-[47px] right-[13px]"
+                      />
+                    )
+                  ) : (
+                    <div></div>
+                  )}
+                </div>
 
-            <div className="flex flex-col mt-[46px]">
-              <label className="font-bold mb-[8px]">აღწერა</label>
-              <textarea
-              {...register("description", {
-                required: true
-              })}
-                className="border-[1px] border-solid border-grey focus:outline-[2px] focus:outline-grey rounded-[4px] box-border px-[16px] py-[13px]"
-                cols="30"
-                rows="3"
-                placeholder="განათლების აღწერა"
-              ></textarea>
-            </div>
-            <div className="w-[798px] h-[1px] bg-[#C1C1C1] mt-[55px]"></div>
-            <button className="font-medium text-white bg-[#62A1EB] rounded-[4px] w-[289px] h-[48px]  mt-[45px]">
+                {/* ხარისხი  /////////////////////////////////// */}
+                <div className="flex gap-[56px] mt-[77px]">
+                  {/* select ///////////////////////////////////////////// */}
+                  <select
+                    onChange={selectChangeHandler}
+                    className="w-[371px] h-[48px] px-[16px] py-[13px] border-grey border-[1px] border-solid rounded-[4px] focus:outline-[2px] focus:outline-grey  mb-[8px] mt-[30px]"
+                  >
+                    <option hidden className="opacity-60 text-xxl">
+                      აირჩიეთ ხარისხი
+                    </option>
+                    {selectData}
+                  </select>
+                  {/* დამტავრების რიცხცი /////////////////////////// */}
+                  <div
+                    className="flex flex-col relative"
+                    onChange={inputTriggerHandler}
+                  >
+                    <label
+                      className="font-bold mb-[8px]"
+                      style={
+                        dirtyFields[`schoolFinnish${index}`]
+                          ? errors[`schoolFinnish${index}`]
+                            ? { color: "#E52F2F" }
+                            : { color: "#98E37E" }
+                          : { color: "#000000" }
+                      }
+                    >
+                      დამთავრების რიცხვი
+                    </label>
+                    <input
+                      {...register(`schoolFinnish${index}`, {
+                        required: true,
+                      })}
+                      className="w-[371px] h-[48px] px-[16px] py-[13px] border-grey border-[1px] border-solid rounded-[4px] focus:outline-[2px] focus:outline-grey  mb-[8px] "
+                      type="date"
+                      style={
+                        dirtyFields[`schoolFinnish${index}`]
+                          ? errors[`schoolFinnish${index}`]
+                            ? { borderColor: "#E52F2F" }
+                            : { borderColor: "#98E37E" }
+                          : { borderColor: "#BCBCBC" }
+                      }
+                    />
+                    {dirtyFields[`schoolFinnish${index}`] ? (
+                      errors[`schoolFinnish${index}`] ? (
+                        <img
+                          src={errorIcon}
+                          className="w-[18px] h-[18px] absolute top-[47px] right-[-30px]"
+                        />
+                      ) : (
+                        <img
+                          src={successIcon}
+                          className="w-[18px] h-[18px] absolute top-[47px] right-[-30px]"
+                        />
+                      )
+                    ) : (
+                      <div></div>
+                    )}
+                  </div>
+                </div>
+
+                <div
+                  className="flex flex-col mt-[46px] relative"
+                  onChange={inputTriggerHandler}
+                >
+                  <label
+                    className="font-bold mb-[8px]"
+                    style={
+                      dirtyFields[`educationDescription${index}`]
+                        ? errors[`educationDescription${index}`]
+                          ? { color: "#E52F2F" }
+                          : { color: "#98E37E" }
+                        : { color: "#000000" }
+                    }
+                  >
+                    აღწერა
+                  </label>
+                  <textarea
+                    {...register(`educationDescription${index}`, {
+                      required: true,
+                    })}
+                    className="border-[1px] border-solid border-grey focus:outline-[2px] focus:outline-grey rounded-[4px] box-border px-[16px] py-[13px]"
+                    cols="30"
+                    rows="3"
+                    placeholder="როლი თანამდებობაზე და ზოგადი აღწერა"
+                    style={
+                      dirtyFields[`educationDescription${index}`]
+                        ? errors[`educationDescription${index}`]
+                          ? { borderColor: "#E52F2F" }
+                          : { borderColor: "#98E37E" }
+                        : { borderColor: "#BCBCBC" }
+                    }
+                  ></textarea>
+                  {dirtyFields[`educationDescription${index}`] ? (
+                    errors[`educationDescription${index}`] ? (
+                      <img
+                        src={errorIcon}
+                        className="w-[18px] h-[18px] absolute top-[47px] right-[-27px]"
+                      />
+                    ) : (
+                      <img
+                        src={successIcon}
+                        className="w-[18px] h-[18px] absolute top-[47px] right-[13px]"
+                      />
+                    )
+                  ) : (
+                    <div></div>
+                  )}
+                </div>
+                <div className="w-[798px] h-[1px] bg-[#C1C1C1] mt-[55px]"></div>
+              </div>
+            ))}
+            <button
+              onClick={addForm}
+              type="sumbit"
+              className="font-medium text-white bg-[#62A1EB] rounded-[4px] w-[289px] h-[48px]  mt-[45px]"
+            >
               სხვა სასწავლებლის დამატება
             </button>
-            <div className="flex justify-between mt-[115px]">
+            <div className="flex justify-between mt-[115px] mb-[65px]">
               <button className="font-medium text-white bg-purple rounded-[4px] w-[151px] h-[48px]  ">
                 უკან
               </button>
@@ -111,8 +290,9 @@ const Education = () => {
           </form>
         </div>
       </section>
+      <Resume watchForm={watchForm} />
     </div>
   );
 };
 
-export default Education;
+export default Experience;
