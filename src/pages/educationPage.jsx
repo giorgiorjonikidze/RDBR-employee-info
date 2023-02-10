@@ -47,8 +47,8 @@ const Experience = () => {
     setValue("educationDescription", watchForm.educationDescription, {
       shouldDirty: true,
     });
-    setValue("schoolFinnish", watchForm.schoolFinnish, { shouldDirty: true });
-    setValue("school", watchForm.school, { shouldDirty: true });
+    setValue("institute_due_date", watchForm.institute_due, { shouldDirty: true });
+    setValue("institute", watchForm.institute, { shouldDirty: true });
   };
   const watchForm = watch();
 
@@ -115,8 +115,8 @@ const Experience = () => {
                   <label
                     className="font-bold mb-[8px]"
                     style={
-                      dirtyFields[`school${index}`]
-                        ? errors[`school${index}`]
+                      dirtyFields[`institute${index}`]
+                        ? errors[`institute${index}`]
                           ? { color: "#E52F2F" }
                           : { color: "#98E37E" }
                         : { color: "#000000" }
@@ -125,7 +125,7 @@ const Experience = () => {
                     სასწავლებელი
                   </label>
                   <input
-                    {...register(`school${index}`, {
+                    {...register(`institute${index}`, {
                       required: true,
                       minLength: 2,
                     })}
@@ -133,8 +133,8 @@ const Experience = () => {
                     type="text"
                     placeholder="სასწავლებელი"
                     style={
-                      dirtyFields[`school${index}`]
-                        ? errors[`school${index}`]
+                      dirtyFields[`institute${index}`]
+                        ? errors[`institute${index}`]
                           ? { borderColor: "#E52F2F" }
                           : { borderColor: "#98E37E" }
                         : { borderColor: "#BCBCBC" }
@@ -143,8 +143,8 @@ const Experience = () => {
                   <p className="font-light text-sm text-dark">
                     მინიმუმ 2 სიმბოლო
                   </p>
-                  {dirtyFields[`school${index}`] ? (
-                    errors[`school${index}`] ? (
+                  {dirtyFields[`institute${index}`] ? (
+                    errors[`institute${index}`] ? (
                       <img
                         src={errorIcon}
                         className="w-[18px] h-[18px] absolute top-[47px] right-[-27px]"
@@ -180,8 +180,8 @@ const Experience = () => {
                     <label
                       className="font-bold mb-[8px]"
                       style={
-                        dirtyFields[`schoolFinnish${index}`]
-                          ? errors[`schoolFinnish${index}`]
+                        dirtyFields[`institute_due_date${index}`]
+                          ? errors[`institute_due_date${index}`]
                             ? { color: "#E52F2F" }
                             : { color: "#98E37E" }
                           : { color: "#000000" }
@@ -190,21 +190,21 @@ const Experience = () => {
                       დამთავრების რიცხვი
                     </label>
                     <input
-                      {...register(`schoolFinnish${index}`, {
+                      {...register(`institute_due_date${index}`, {
                         required: true,
                       })}
                       className="w-[371px] h-[48px] px-[16px] py-[13px] border-grey border-[1px] border-solid rounded-[4px] focus:outline-[2px] focus:outline-grey  mb-[8px] "
                       type="date"
                       style={
-                        dirtyFields[`schoolFinnish${index}`]
-                          ? errors[`schoolFinnish${index}`]
+                        dirtyFields[`institute_due_date${index}`]
+                          ? errors[`institute_due_date${index}`]
                             ? { borderColor: "#E52F2F" }
                             : { borderColor: "#98E37E" }
                           : { borderColor: "#BCBCBC" }
                       }
                     />
-                    {dirtyFields[`schoolFinnish${index}`] ? (
-                      errors[`schoolFinnish${index}`] ? (
+                    {dirtyFields[`institute_due_date${index}`] ? (
+                      errors[`institute_due_date${index}`] ? (
                         <img
                           src={errorIcon}
                           className="w-[18px] h-[18px] absolute top-[47px] right-[-30px]"

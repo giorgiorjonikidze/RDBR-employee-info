@@ -8,9 +8,10 @@ import Resume from "../components/resume";
 
 import backArrow from "../assets/images/back-arrow.svg";
 import emailIcon from "../assets/images/icon-email.svg";
-import phoneIcon from "../assets/images/icon-phone.svg";
+import phone_numberIcon from "../assets/images/icon-phone.svg";
 import errorIcon from "../assets/images/icon-error.svg";
 import successIcon from "../assets/images/icon-success.svg";
+
 import { resumeActions } from "./../store/store";
 
 const UserPage = () => {
@@ -63,8 +64,7 @@ const UserPage = () => {
 
   const onSubmit = (data) => {
     // console.log("form sumbited", data);
-    dispatch(resumeActions.updateData(data));
-    dispatch(resumeActions.updateImage(image));
+    
     navigate("/experience");
   };
   const onError = ( data) => {
@@ -74,12 +74,12 @@ const UserPage = () => {
       surname: true,
       file: true,
       email: true,
-      phone: true
+      phone_number: true
     })
     setValue("name", watchForm.name, { shouldDirty: true });
     setValue("surname", watchForm.surname, { shouldDirty: true });
     setValue("email", watchForm.email, { shouldDirty: true });
-    setValue("phone", watchForm.phone, { shouldDirty: true });
+    setValue("phone_number", watchForm.phone_number, { shouldDirty: true });
     setValue("file", watchForm.file, { shouldDirty: true });
   };
 
@@ -316,8 +316,8 @@ const UserPage = () => {
               <label
                 className="font-bold mb-[8px]"
                 style={
-                  dirtyFields.phone
-                    ? errors.phone
+                  dirtyFields.phone_number
+                    ? errors.phone_number
                       ? { color: "#E52F2F" }
                       : { color: "#98E37E" }
                     : { color: "#000000" }
@@ -326,7 +326,7 @@ const UserPage = () => {
                 მობილურის ნომერი
               </label>
               <input
-                {...register("phone", {
+                {...register("phone_number", {
                   required: true,
                   pattern: /^\+995[0-9]{9}$/,
                 })}
@@ -334,8 +334,8 @@ const UserPage = () => {
                 type="text"
                 placeholder="+995 551 12 34 56"
                 style={
-                  dirtyFields.phone
-                    ? errors.phone
+                  dirtyFields.phone_number
+                    ? errors.phone_number
                       ? { borderColor: "#E52F2F" }
                       : { borderColor: "#98E37E" }
                     : { borderColor: "#BCBCBC" }
@@ -344,8 +344,8 @@ const UserPage = () => {
               <p className="font-light text-sm text-dark">
                 უნდა აკმაყოფილებდეს ქართული მობილურის ნომრის ფორმატს
               </p>
-              {dirtyFields.phone ? (
-                errors.phone ? (
+              {dirtyFields.phone_number ? (
+                errors.phone_number_number ? (
                   <img
                     src={errorIcon}
                     className="w-[18px] h-[18px] absolute top-[47px] right-[-27px]"
