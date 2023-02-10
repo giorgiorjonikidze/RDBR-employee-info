@@ -119,14 +119,14 @@ const Experience = () => {
       <section className="flex gap-[61px] mt-[]">
         <img className="self-start" src={backArrow} alt="" />
         <div className="w-[798px]">
-          <div className="flex justify-between mb-[12px] border-b-[1px] border-solid border-[#1A1A1A] pb-[12px]">
+          <div className="flex justify-between mb-[60px] border-b-[1px] border-solid border-[#1A1A1A] pb-[12px]">
             <h1 className="font-bold text-xxl ">გამოცდილება</h1>
             <p className="text-[20px] text-[#1A1A1A]">2/3</p>
           </div>
           <form onSubmit={handleSubmit(onSubmit, onError)}>
             {/* map /////////////////////////////////////////////////////////// */}
             {educationFormCount?.map((form, index) => (
-              <div key={index} className="mt-[60px]">
+              <div key={index} className="">
                 {/* სასწავლებელი /////////////////////// */}
                 <div
                   className="flex flex-col mt-[13px] relative"
@@ -313,13 +313,13 @@ const Experience = () => {
                     <div></div>
                   )}
                 </div>
-                <div className="w-[798px] h-[1px] bg-[#C1C1C1] mt-[55px]"></div>
+                <div className="w-[798px] h-[1px] bg-[#C1C1C1] mt-[55px] mb-[34px]"></div>
               </div>
             ))}
             <button
               onClick={addForm}
               type="sumbit"
-              className="font-medium text-white bg-[#62A1EB] rounded-[4px] w-[289px] h-[48px]  mt-[45px]"
+              className="font-medium text-white bg-[#62A1EB] rounded-[4px] w-[289px] h-[48px]  mt-[12px]"
             >
               სხვა სასწავლებლის დამატება
             </button>

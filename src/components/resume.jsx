@@ -64,7 +64,7 @@ const Resume = ({ watchForm,}) => {
                 <div className="w-[662px] h-[1px] bg-[#C8C8C8]"></div>
                 <div className="mt-[50px]">
                   <div className="flex font-bold mb-[7px]">
-                    <p className="">{watchForm[`position${index}`]}</p>
+                    <p className="mr-[5px]">{watchForm[`position${index}`]}{","}</p>
                     <p>{watchForm[`employer${index}`]}</p>
                   </div>
                   <div className="flex text-[#909090] mb-[16px]">
