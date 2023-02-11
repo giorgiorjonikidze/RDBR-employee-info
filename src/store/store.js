@@ -5,6 +5,7 @@ const resumeSlice = createSlice({
   initialState: {
     experienceFormCount: [1],
     eduCationFormCount: [1],
+    image: null
   },
   reducers: {
     addToExperience(state) {
@@ -13,12 +14,15 @@ const resumeSlice = createSlice({
     addToEducation(state) {
       state.eduCationFormCount.push(1);
     },
+    setImage(state,action){
+      state.image = action.payload;
+    }
   },
 });
 
 const persistedState = localStorage.getItem("resume")
   ? JSON.parse(localStorage.getItem("resume"))
-  : { experienceFormCount: [1], eduCationFormCount: [1] };
+  : { experienceFormCount: [1], eduCationFormCount: [1], image: null };
 
 const store = configureStore({
   reducer: resumeSlice.reducer,
@@ -35,7 +39,7 @@ const store = configureStore({
   ],
 });
 
-console.log(store.getState());
+// console.log(store.getState());
 
 export const resumeActions = resumeSlice.actions;
 

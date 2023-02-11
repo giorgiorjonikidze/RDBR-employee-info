@@ -15,7 +15,7 @@ import successIcon from "../assets/images/icon-success.svg";
 import { resumeActions } from "./../store/store";
 
 const UserPage = () => {
-  const [image, setImage] = useState(null);
+  const [imageResult, setImageResult] = useState(null);
   const [imageError, setImageError] = useState(false);
 
   const dispatch = useDispatch();
@@ -23,22 +23,23 @@ const UserPage = () => {
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
+    dispatch(resumeActions.setImage(file));
     const reader = new FileReader();
     setImageError(true);
 
     if (file) {
       reader.readAsDataURL(file);
       reader.onloadend = () => {
-        setImage(reader.result);
-        localStorage.setItem("image", reader.result);
+        setImageResult(reader.result);
+        localStorage.setItem("image result", reader.result);
       };
     }
   };
 
   const retrieveImageFromLocalStorage = () => {
-    const imageFromLocalStorage = localStorage.getItem("image");
+    const imageFromLocalStorage = localStorage.getItem("image result");
     if (imageFromLocalStorage) {
-      setImage(imageFromLocalStorage);
+      setImageResult(imageFromLocalStorage);
     }
   };
 
@@ -61,28 +62,26 @@ const UserPage = () => {
 
   const watchForm = watch();
 
-
   const onSubmit = (data) => {
     // console.log("form sumbited", data);
-    
+
     navigate("/experience");
   };
-  const onError = ( data) => {
-    console.log(" form errors",  data);
+  const onError = (data) => {
+    console.log(" form errors", data);
     setDirtyInputs({
       name: true,
       surname: true,
       file: true,
       email: true,
-      phone_number: true
-    })
+      phone_number: true,
+    });
     setValue("name", watchForm.name, { shouldDirty: true });
     setValue("surname", watchForm.surname, { shouldDirty: true });
     setValue("email", watchForm.email, { shouldDirty: true });
     setValue("phone_number", watchForm.phone_number, { shouldDirty: true });
     setValue("file", watchForm.file, { shouldDirty: true });
   };
-
 
   // useEffect(() => {
   //   trigger();
@@ -345,7 +344,7 @@ const UserPage = () => {
                 უნდა აკმაყოფილებდეს ქართული მობილურის ნომრის ფორმატს
               </p>
               {dirtyFields.phone_number ? (
-                errors.phone_number_number ? (
+                errors.phone_number ? (
                   <img
                     src={errorIcon}
                     className="w-[18px] h-[18px] absolute top-[47px] right-[-27px]"
@@ -369,7 +368,7 @@ const UserPage = () => {
           </form>
         </div>
       </section>
-      <Resume watchForm={watchForm} image={image} />
+      <Resume watchForm={watchForm} image={imageResult} />
     </div>
   );
 };

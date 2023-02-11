@@ -3,8 +3,8 @@ import phoneIcon from "../assets/images/icon-phone.svg";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 
-const Resume = ({ watchForm,}) => {
-  const getImage = localStorage.getItem("image");
+const Resume = ({ watchForm, selected}) => {
+  const getImage = localStorage.getItem("image result");
 
   const expCount = useSelector((state) => state.experienceFormCount);
   const eduCount = useSelector((state) => state.eduCationFormCount);
@@ -32,19 +32,19 @@ const Resume = ({ watchForm,}) => {
           )}
           {/* ტელეფონი ////////////////////////// */}
 
-          {watchForm.phone && (
+          {watchForm.phone_number && (
             <div className="flex items-center gap-[10px] mb-[34px]">
               <img src={phoneIcon} />
-              <p className="text-xl text-dark_font">{watchForm.phone}</p>
+              <p className="text-xl text-dark_font">{watchForm.phone_number}</p>
             </div>
           )}
           {/* გამოცდილება/////////////  */}
-          {watchForm.userInfo && (
+          {watchForm.about_me && (
             <div className="flex flex-col">
               <p className="font-bold text-xl text-red_font mb-[15px]">
                 ᲩᲔᲛ ᲨᲔᲡᲐᲮᲔᲑ
               </p>
-              <p>{watchForm.userInfo}</p>
+              <p>{watchForm.about_me}</p>
             </div>
           )}
           <div className="mt-[50px]">
@@ -61,10 +61,10 @@ const Resume = ({ watchForm,}) => {
             </div>
             {expCount?.map((form, index) => (
               <div>
-                <div className="w-[662px] h-[1px] bg-[#C8C8C8]"></div>
+                {/* <div className="w-[662px] h-[1px] bg-[#C8C8C8]"></div> */}
                 <div className="mt-[50px]">
                   <div className="flex font-bold mb-[7px]">
-                    <p className="mr-[5px]">{watchForm[`position${index}`]}{","}</p>
+                    <p className="mr-[5px]">{watchForm[`position${index}`]}</p>
                     <p>{watchForm[`employer${index}`]}</p>
                   </div>
                   <div className="flex text-[#909090] mb-[16px]">
@@ -81,10 +81,10 @@ const Resume = ({ watchForm,}) => {
           <div>
             {eduCount?.map((form, index) => (
               <div>
-                <div className="w-[662px] h-[1px] bg-[#C8C8C8]"></div>
+                {/* <div className="w-[662px] h-[1px] bg-[#C8C8C8]"></div> */}
                 <div className="mt-[50px]">
                   <div className="flex font-bold mb-[7px]">
-                    <p>{watchForm[`institute${index}`]}</p>
+                    <p className="mr-[5px]">{watchForm[`institute${index}`]}{""}{selected}</p>
                   </div>
                   <div className="flex text-[#909090] mb-[16px]">
                     <p>{watchForm[`institute_due_date${index}`]}</p>

@@ -13,14 +13,23 @@ import Resume from "../components/resume";
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import { resumeActions } from "./../store/store";
+import transformObject from "../utils/transformObject";
 
 const Experience = () => {
+  const [image, setImage] = useState(null);
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    setImage(file);
+  };
+
   const userInfoData = useSelector((state) => state);
   const degreeUrl = "https://resume.redberryinternship.ge/api/degrees";
   const educationFormCount = useSelector((state) => state.eduCationFormCount);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const reduxImage = useSelector((state) => state.image);
 
   const [fetchedSelectData, setFetchedSelectData] = useState([]);
   const [selected, setSelected] = useState("");
@@ -48,13 +57,87 @@ const Experience = () => {
     setValue,
     storage: window.localStorage,
   });
+  const testData = {
+    name: "დავით",
+    surname: "ონიანი",
+    email: "davitoniani@redberry.ge",
+    phone_number: "+995598123456",
+    experiences: [
+      {
+        position: "back-end developer",
+        employer: "Redberry",
+        start_date: "2019/09/09",
+        due_date: "2020/09/23",
+        description:
+          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam ornare nunc dui, a pellentesque magna blandit dapibus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum mattis diam nisi, at venenatis dolor aliquet vel. Pellentesque aliquet leo nec tortor pharetra, ac consectetur orci bibendum.",
+      },
+    ],
+    educations: [
+      {
+        institute: "თსუ",
+        degree_id: 7,
+        due_date: "2017/06/25",
+        description:
+          "სამართლის ფაკულტეტის მიზანი იყო მიგვეღო ფართო თეორიული ცოდნა სამართლის არსის, სისტემის, ძირითადი პრინციპების, სამართლებრივი სისტემების, ქართული სამართლის ისტორიული წყაროების, კერძო, სისხლის და საჯარო სამართლის სფეროების ძირითადი თეორიების, პრინციპებისა და რეგულირების თავისებურებების შესახებ.",
+      },
+    ],
+    image: reduxImage,
+    about_me: "ეს არის აღწერა ჩემს შესახებ",
+  };
+
+  const testData2 = {
+    email: "gela@redberry.ge",
+    name: "გელა",
+    phone_number: "+995 555 12 12 12",
+    surname: "გნოლია",
+    experiences: [
+      {
+        description:
+          "Experienced Javascript Native Developer with 5 years in the industry. proficient withreact. Used problem-solving aptitude to encahge application performance by 14%.created data visualisation tools and integrated designs. ",
+        employer: "Microsoft",
+        due_date: "2023-02-14",
+        start_date: "2023-02-08",
+        position: "React Native Developer, ",
+      },
+    ],
+    educations: [
+      {
+        institute: "თსუ,",
+        description:
+          "ვსწავლობდი გულმოდგინეთ. მყავდა ფრიადები. რაც შემეძლო — ვქენი. კომპიუტერები მიყვარდა. ვიჯექი ჩემთვის, ვაკაკუნებდი ამ კლავიშებზე. მეუნებოდნენ — დაჯექი, წაიკითხე რამე, რას აკაკუნებ, დრო მოვა და ჩაგიკაკუნებსო. აჰა, მოვიდა დრო და ვერა ვარ დეველოპერი?",
+        due_date: "2023-02-23",
+        degree_id: "4",
+      },
+    ],
+    about_me:
+      "ძალიან მიყვარს დიზაინის კეთება. დილით ადრე რომ \nავდგები გამამხნევებელი ვარჯიშების მაგიერ დიზაინს ვაკეთებ. ",
+  };
 
   const onSubmit = (data) => {
     console.log("form sumbited", data);
     const selectError = validateSelect();
-    console.log("select error", selectError);
     setSelectIsTuched(true);
+
+    const trans = transformObject(data, selected);
+    const allData = { ...trans, ...{ image: reduxImage } };
+
+
+    axios({
+      method: "post",
+      url: "https://resume.redberryinternship.ge/api/cvs",
+      data: allData,
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    })
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error.response.data.errors);
+      });
   };
+
   const onError = (errors) => {
     console.log(" form errors", errors);
     setValue("educationDescription", watchForm.educationDescription, {
@@ -92,7 +175,7 @@ const Experience = () => {
       .then((response) =>
         setFetchedSelectData(
           response.data.map((item) => (
-            <option key={item.title} value={item.title}>
+            <option key={item.title} value={item.id}>
               {item.title}
             </option>
           ))
@@ -103,6 +186,7 @@ const Experience = () => {
 
   const selectChangeHandler = (e) => {
     setSelected(e.target.value);
+    console.log(e.target.value);
     setInvalidSelect(false);
     setSelectIsTuched(true);
   };
@@ -115,6 +199,10 @@ const Experience = () => {
 
   return (
     <div className="mt-[45px] ml-[48px] flex">
+      <div>
+        <input type="file" onChange={handleFileChange} />
+        <button onClick={handleSubmit}>Submit</button>
+      </div>
       {/* left section///////////  */}
       <section className="flex gap-[61px] mt-[]">
         <img className="self-start" src={backArrow} alt="" />
@@ -334,7 +422,7 @@ const Experience = () => {
           </form>
         </div>
       </section>
-      <Resume watchForm={watchForm} />
+      <Resume watchForm={watchForm} selected={selected} />
     </div>
   );
 };
