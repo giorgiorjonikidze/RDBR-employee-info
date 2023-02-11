@@ -60,7 +60,7 @@ const Resume = ({ watchForm, selected}) => {
               )}
             </div>
             {expCount?.map((form, index) => (
-              <div>
+              <div key={index}>
                 {/* <div className="w-[662px] h-[1px] bg-[#C8C8C8]"></div> */}
                 <div className="mt-[50px]">
                   <div className="flex font-bold mb-[7px]">
@@ -80,7 +80,7 @@ const Resume = ({ watchForm, selected}) => {
           </div>
           <div>
             {eduCount?.map((form, index) => (
-              <div>
+              <div key={index}>
                 {/* <div className="w-[662px] h-[1px] bg-[#C8C8C8]"></div> */}
                 <div className="mt-[50px]">
                   <div className="flex font-bold mb-[7px]">
