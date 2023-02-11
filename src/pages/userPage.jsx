@@ -18,12 +18,10 @@ const UserPage = () => {
   const [imageResult, setImageResult] = useState(null);
   const [imageError, setImageError] = useState(false);
 
-  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
-    dispatch(resumeActions.setImage(file));
     const reader = new FileReader();
     setImageError(true);
 

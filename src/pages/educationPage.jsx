@@ -14,6 +14,7 @@ import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import { resumeActions } from "./../store/store";
 import transformObject from "../utils/transformObject";
+import dataURLToImage from "../utils/stringToFile";
 
 const Experience = () => {
   const degreeUrl = "https://resume.redberryinternship.ge/api/degrees";
@@ -27,6 +28,8 @@ const Experience = () => {
   const [selected, setSelected] = useState("");
   const [invalidSelect, setInvalidSelect] = useState(true);
   const [selectIsTuched, setSelectIsTuched] = useState(false);
+
+  
 
   const validateSelect = () => {
     if (selected === "") {
@@ -55,8 +58,10 @@ const Experience = () => {
     const selectError = validateSelect();
     setSelectIsTuched(true);
 
+    const imageFromLocalStorage = dataURLToImage("image result")
+
     const trans = transformObject(data, selected);
-    const allData = { ...trans, ...{ image: reduxImage } };
+    const allData = { ...trans, ...{ image: imageFromLocalStorage } };
 
     axios({
       method: "post",
