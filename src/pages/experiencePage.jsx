@@ -40,7 +40,6 @@ const Experience = () => {
   const watchForm = watch();
 
   const onSubmit = (data) => {
-    console.log("form sumbited", data);
     navigate("/education");
   };
   const onError = (errors) => {

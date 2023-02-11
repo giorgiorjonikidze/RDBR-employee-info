@@ -248,7 +248,7 @@ const UserPage = () => {
                 ჩემ შესახებ (არასავალდებულო)
               </label>
               <textarea
-                {...register("userInfo")}
+                {...register("about_me")}
                 className="px-[16px] border-[1px] border-solid border-grey focus:outline-[2px] focus:outline-grey rounded-[4px] "
                 cols="30"
                 rows="3"

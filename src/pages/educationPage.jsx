@@ -54,7 +54,7 @@ const Experience = () => {
   });
 
   const onSubmit = (data) => {
-    console.log("form sumbited", data);
+    // console.log("form sumbited", data);
     const selectError = validateSelect();
     setSelectIsTuched(true);
 
@@ -62,6 +62,9 @@ const Experience = () => {
 
     const trans = transformObject(data, selected);
     const allData = { ...trans, ...{ image: imageFromLocalStorage } };
+
+    console.log("allData", allData);
+
 
     axios({
       method: "post",

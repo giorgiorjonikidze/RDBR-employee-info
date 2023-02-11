@@ -52,8 +52,8 @@ console.log(formData);
                 </p>
               
             </div>
-            {formData.experiences.map((item) => (
-              <div>
+            {formData.experiences.map((item, index) => (
+              <div key={index} >
                 {/* <div className="w-[662px] h-[1px] bg-[#C8C8C8]"></div> */}
                 <div className="mt-[50px]">
                   <div className="flex font-bold mb-[7px]">
@@ -72,8 +72,8 @@ console.log(formData);
             ))}
           </div>
           <div>
-            {formData.educations.map((item) => (
-              <div>
+            {formData.educations.map((item, index) => (
+              <div key={index}>
                 {/* <div className="w-[662px] h-[1px] bg-[#C8C8C8]"></div> */}
                 <div className="mt-[50px]">
                   <div className="flex font-bold mb-[7px]">
