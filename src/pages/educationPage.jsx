@@ -131,7 +131,8 @@ const Experience = () => {
       },
     })
       .then((response) => {
-        console.log(response);
+        console.log(response.data);
+        navigate("/success", {state: {data: response.data}})
       })
       .catch((error) => {
         console.log(error.response.data.errors);
@@ -157,18 +158,6 @@ const Experience = () => {
     dispatch(resumeActions.addToEducation());
   };
 
-  // useEffect(() => {
-  //   const formsLength = JSON.parse(localStorage.getItem("eduForms length"));
-  //   if (formsLength) {
-  //     setEduForms(formsLength);
-  //   }
-  // }, []);
-
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     localStorage.setItem("eduForms length", JSON.stringify(eduForms));
-  //   }, 500);
-  // }, [eduForms]);
 
   useEffect(() => {
     axios(degreeUrl)
@@ -199,10 +188,6 @@ const Experience = () => {
 
   return (
     <div className="mt-[45px] ml-[48px] flex">
-      <div>
-        <input type="file" onChange={handleFileChange} />
-        <button onClick={handleSubmit}>Submit</button>
-      </div>
       {/* left section///////////  */}
       <section className="flex gap-[61px] mt-[]">
         <img className="self-start" src={backArrow} alt="" />
