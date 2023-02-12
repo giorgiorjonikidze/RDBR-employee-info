@@ -29,8 +29,6 @@ const Experience = () => {
   const [invalidSelect, setInvalidSelect] = useState(true);
   const [selectIsTuched, setSelectIsTuched] = useState(false);
 
-  
-
   const validateSelect = () => {
     if (selected === "") {
       return true;
@@ -58,13 +56,12 @@ const Experience = () => {
     const selectError = validateSelect();
     setSelectIsTuched(true);
 
-    const imageFromLocalStorage = dataURLToImage("image result")
+    const imageFromLocalStorage = dataURLToImage("image result");
 
     const trans = transformObject(data, selected);
     const allData = { ...trans, ...{ image: imageFromLocalStorage } };
 
     console.log("allData", allData);
-
 
     axios({
       method: "post",
@@ -141,11 +138,18 @@ const Experience = () => {
     trigger();
   };
 
+  const returnToHomeHandler = () => {
+    localStorage.clear();
+    navigate("/");
+  };
+
   return (
     <div className="mt-[45px] ml-[48px] flex">
       {/* left section///////////  */}
       <section className="flex gap-[61px] mt-[]">
-        <img className="self-start" src={backArrow} alt="" />
+        <button onClick={returnToHomeHandler} className="self-start">
+          <img src={backArrow} />
+        </button>
         <div className="w-[798px]">
           <div className="flex justify-between mb-[60px] border-b-[1px] border-solid border-[#1A1A1A] pb-[12px]">
             <h1 className="font-bold text-xxl ">გამოცდილება</h1>

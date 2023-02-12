@@ -69,16 +69,19 @@ const Experience = () => {
     console.log("trigger");
   };
 
-  
-
+  const returnToHomeHandler = () => {
+    localStorage.clear();
+    navigate("/");
+  };
   
 
   return (
     <div className="mt-[45px] ml-[48px] flex">
       {/* left section///////////  */}
       <section className="flex gap-[61px] mt-[]">
-
-        <img className="self-start_date" src={backArrow} alt="" />
+        <button onClick={returnToHomeHandler} className="self-start">
+          <img src={backArrow} />
+        </button>
         <div className="w-[798px]">
           <div className="flex justify-between  border-b-[1px] border-solid border-[#1A1A1A] pb-[12px] mb-[60px]">
             <h1 className="font-bold text-xxl ">გამოცდილება</h1>
