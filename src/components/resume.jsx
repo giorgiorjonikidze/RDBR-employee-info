@@ -91,7 +91,13 @@ const Resume = ({ watchForm, selected }) => {
                     {watchForm[`description${index}`]}
                   </p>
                 </div>
-                <div className="w-[662px] h-[0.5px] bg-[#C8C8C8] mt-[32px]"></div>
+                {(watchForm[`position${index}`] ||
+                  watchForm[`start_date${index}`] ||
+                  watchForm[`due_date${index}`] ||
+                  watchForm[`employer${index}`] ||
+                  watchForm[`description${index}`]) && (
+                  <div className="w-[662px] h-[0.5px] bg-[#C8C8C8] mt-[32px]"></div>
+                )}
               </div>
             ))}
           </div>
@@ -100,11 +106,10 @@ const Resume = ({ watchForm, selected }) => {
             {/* education ////////////////////////////////////////////// */}
             <div>
               <div className="mt-[24px] mb-[15px]">
-                {(watchForm.position0 ||
-                  watchForm.start_date0 ||
-                  watchForm.due_date0 ||
-                  watchForm.employer0 ||
-                  watchForm.description0) && (
+                {(watchForm.institute0 ||
+                  watchForm.institute_due_date0 ||
+                  watchForm.educationDescription ||
+                  selected) && (
                   <p className="font-bold text-xl text-red_font mb-[15px]">
                     ᲒᲐᲜᲐᲗᲚᲔᲑᲐ
                   </p>
@@ -114,14 +119,16 @@ const Resume = ({ watchForm, selected }) => {
                 <div key={index}>
                   <div className="mt-[15px]">
                     <div className="flex font-bold mb-[7px]">
-                      <p>
-                        {watchForm[`institute${index}`]}
-                      </p>
-                      {selected && watchForm[`institute${index}`] && watchForm[`institute${index}`][watchForm[`institute${index}`]?.length - 1] != "," ? (
-                      <p className="mr-[4px]">,</p>
-                    ) : (
-                      <p className="mr-[4px]"></p>
-                    )}
+                      <p>{watchForm[`institute${index}`]}</p>
+                      {selected &&
+                      watchForm[`institute${index}`] &&
+                      watchForm[`institute${index}`][
+                        watchForm[`institute${index}`]?.length - 1
+                      ] != "," ? (
+                        <p className="mr-[4px]">,</p>
+                      ) : (
+                        <p className="mr-[4px]"></p>
+                      )}
                       <p>{selected}</p>
                     </div>
                     <div className="flex text-[#909090] mb-[16px]">
@@ -131,7 +138,12 @@ const Resume = ({ watchForm, selected }) => {
                       {watchForm[`educationDescription${index}`]}
                     </p>
                   </div>
-                  <div className="w-[662px] h-[0.5px] bg-[#C8C8C8] mt-[32px]"></div>
+                  {(watchForm[`institute${index}`] ||
+                    selected ||
+                    watchForm[`institute_due_date${index}`] ||
+                    watchForm[`educationDescription${index}`]) && (
+                    <div className="w-[662px] h-[0.5px] bg-[#C8C8C8] mt-[32px]"></div>
+                  )}
                 </div>
               ))}
             </div>

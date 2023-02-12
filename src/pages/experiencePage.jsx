@@ -112,21 +112,7 @@ const Experience = () => {
                   <p className="font-light text-sm text-dark">
                     მინიმუმ 2 სიმბოლო
                   </p>
-                  {dirtyFields[`position${index}`] ? (
-                    errors[`position${index}`] ? (
-                      <img
-                        src={errorIcon}
-                        className="w-[18px] h-[18px] absolute top-[47px] right-[-27px]"
-                      />
-                    ) : (
-                      <img
-                        src={successIcon}
-                        className="w-[18px] h-[18px] absolute top-[47px] right-[13px]"
-                      />
-                    )
-                  ) : (
-                    <div></div>
-                  )}
+                  {validationIcon([`position${index}`], dirtyFields, errors)}
                 </div>
                 {/* დამსაქმებელი ///////////////////////////////////////////// */}
                 <div
