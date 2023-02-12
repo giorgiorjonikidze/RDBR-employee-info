@@ -57,7 +57,6 @@ const Experience = () => {
 
   const inputTriggerHandler = () => {
     trigger();
-    console.log("trigger");
   };
 
   const returnToHomeHandler = () => {

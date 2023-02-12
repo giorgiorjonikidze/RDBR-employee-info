@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 const Test = () => {
-  const [selects, setSelects] = useState([]);
+  const [selects, setSelects] = useState([{ value: "" }]);
 
   const handleAddSelect = () => {
     setSelects([...selects, { value: "" }]);

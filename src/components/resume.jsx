@@ -117,10 +117,7 @@ const Resume = ({ watchForm, selected }) => {
                       <p>
                         {watchForm[`institute${index}`]}
                       </p>
-                      {selected &&
-                    watchForm[`institute${index}`][
-                      watchForm[`institute${index}`]?.length - 1
-                    ] != "," ? (
+                      {selected && watchForm[`institute${index}`] && watchForm[`institute${index}`][watchForm[`institute${index}`]?.length - 1] != "," ? (
                       <p className="mr-[4px]">,</p>
                     ) : (
                       <p className="mr-[4px]"></p>

@@ -16,16 +16,21 @@ import { resumeActions } from "./../store/store";
 import transformObject from "../utils/transformObject";
 import dataURLToImage from "../utils/stringToFile";
 
+import {
+  borderErrorStyling,
+  labelErrorStyling,
+  validationIcon,
+} from "../utils/errorStyling";
+
 const Experience = () => {
   const degreeUrl = "https://resume.redberryinternship.ge/api/degrees";
   const educationFormCount = useSelector((state) => state.eduCationFormCount);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const reduxImage = useSelector((state) => state.image);
 
   const [fetchedSelectData, setFetchedSelectData] = useState([]);
-  const [selectedId, setSelectedId] = useState("");
+  const [selectedId, setSelectedId] = useState([{ value: "" }]);
   const [selectedTitle, setSelectedTitle] = useState("");
   const [invalidSelect, setInvalidSelect] = useState(true);
   const [selectIsTuched, setSelectIsTuched] = useState(false);
@@ -46,7 +51,7 @@ const Experience = () => {
     formState: { dirtyFields, errors },
   } = useForm();
 
-  useFormPersist("user info", {
+  useFormPersist("form info", {
     watch,
     setValue,
     storage: window.localStorage,
@@ -99,20 +104,23 @@ const Experience = () => {
 
   const addForm = () => {
     dispatch(resumeActions.addToEducation());
+    setSelectedId([...selectedId, { value: "" }]);
   };
 
   useEffect(() => {
+    setSelectedId(educationFormCount.map(() => ({ value: "" })));
     const fetchData = async () => {
       try {
         const response = await axios(degreeUrl);
         setFetchedSelectData(response.data);
-        const value = localStorage.getItem("selectedValue");
-        const degreeTitle = response.data[value-1].title;
+        const value = JSON.parse(localStorage.getItem("selectedValue"));
+        // const degreeTitle = response.data[value - 1].title;
+        console.log(value)
         if (value) {
           setSelectedId(value);
-          setSelectedTitle(degreeTitle);
-          setInvalidSelect(false);
-          setSelectIsTuched(true);
+          // setSelectedTitle(degreeTitle);
+          // setInvalidSelect(false);
+          // setSelectIsTuched(true);
         }
       } catch (error) {
         console.log(error);
@@ -121,19 +129,21 @@ const Experience = () => {
     fetchData();
   }, []);
 
-  const selectChangeHandler = (e) => {
-    const { value } = e.target;
-    const degreeTitle = fetchedSelectData[value-1].title;
-    setInvalidSelect(false);
-    setSelectIsTuched(true);
+  const selectChangeHandler = (event, index) => {
+    // const degreeTitle = fetchedSelectData[e.target.value - 1].title;
+    // setInvalidSelect(false);
+    // setSelectIsTuched(true);
 
-    setSelectedTitle(degreeTitle);
-    setSelectedId(value);
+    // setSelectedTitle(degreeTitle);
+    // setSelectedId(value);
 
-    console.log(degreeTitle);
-    localStorage.setItem("selectedValue", value);
+    const newSelects = [...selectedId];
+    newSelects[index].value = event.target.value;
+    setSelectedId(newSelects);
+    console.log(index);
+
+    localStorage.setItem("selectedValue", JSON.stringify(newSelects));
   };
-
 
   const inputTriggerHandler = () => {
     trigger();
@@ -167,13 +177,11 @@ const Experience = () => {
                 >
                   <label
                     className="font-bold mb-[8px]"
-                    style={
-                      dirtyFields[`institute${index}`]
-                        ? errors[`institute${index}`]
-                          ? { color: "#E52F2F" }
-                          : { color: "#98E37E" }
-                        : { color: "#000000" }
-                    }
+                    style={labelErrorStyling(
+                      [`institute${index}`],
+                      dirtyFields,
+                      errors
+                    )}
                   >
                     სასწავლებელი
                   </label>
@@ -185,32 +193,17 @@ const Experience = () => {
                     className="h-[48px] px-[16px] py-[13px] border-grey border-[1px] border-solid rounded-[4px] focus:outline-[2px] focus:outline-grey  mb-[8px]"
                     type="text"
                     placeholder="სასწავლებელი"
-                    style={
-                      dirtyFields[`institute${index}`]
-                        ? errors[`institute${index}`]
-                          ? { borderColor: "#E52F2F" }
-                          : { borderColor: "#98E37E" }
-                        : { borderColor: "#BCBCBC" }
-                    }
+                    style={borderErrorStyling(
+                      [`institute${index}`],
+                      dirtyFields,
+                      errors
+                    )}
                   />
                   <p className="font-light text-sm text-dark">
                     მინიმუმ 2 სიმბოლო
                   </p>
-                  {dirtyFields[`institute${index}`] ? (
-                    errors[`institute${index}`] ? (
-                      <img
-                        src={errorIcon}
-                        className="w-[18px] h-[18px] absolute top-[47px] right-[-27px]"
-                      />
-                    ) : (
-                      <img
-                        src={successIcon}
-                        className="w-[18px] h-[18px] absolute top-[47px] right-[13px]"
-                      />
-                    )
-                  ) : (
-                    <div></div>
-                  )}
+
+                  {validationIcon([`institute${index}`], dirtyFields, errors)}
                 </div>
 
                 {/* ხარისხი  /////////////////////////////////// */}
@@ -218,8 +211,8 @@ const Experience = () => {
                   {/* select ///////////////////////////////////////////// */}
                   <div className="relative">
                     <select
-                      value={selectedId}
-                      onChange={selectChangeHandler}
+                      value={selectedId[index]?.value}
+                      onChange={(e) => selectChangeHandler(e, index)}
                       className="w-[371px] h-[48px] px-[16px] py-[13px] border-grey border-[1px] border-solid rounded-[4px] focus:outline-[2px] focus:outline-grey  mb-[8px] mt-[30px] "
                       style={
                         selectIsTuched
@@ -261,13 +254,11 @@ const Experience = () => {
                   >
                     <label
                       className="font-bold mb-[8px]"
-                      style={
-                        dirtyFields[`institute_due_date${index}`]
-                          ? errors[`institute_due_date${index}`]
-                            ? { color: "#E52F2F" }
-                            : { color: "#98E37E" }
-                          : { color: "#000000" }
-                      }
+                      style={labelErrorStyling(
+                        [`institute_due_date${index}`],
+                        dirtyFields,
+                        errors
+                      )}
                     >
                       დამთავრების რიცხვი
                     </label>
@@ -277,13 +268,11 @@ const Experience = () => {
                       })}
                       className="w-[371px] h-[48px] px-[16px] py-[13px] border-grey border-[1px] border-solid rounded-[4px] focus:outline-[2px] focus:outline-grey  mb-[8px] "
                       type="date"
-                      style={
-                        dirtyFields[`institute_due_date${index}`]
-                          ? errors[`institute_due_date${index}`]
-                            ? { borderColor: "#E52F2F" }
-                            : { borderColor: "#98E37E" }
-                          : { borderColor: "#BCBCBC" }
-                      }
+                      style={borderErrorStyling(
+                        [`institute_due_date${index}`],
+                        dirtyFields,
+                        errors
+                      )}
                     />
                     {dirtyFields[`institute_due_date${index}`] ? (
                       errors[`institute_due_date${index}`] ? (
@@ -327,13 +316,11 @@ const Experience = () => {
                     cols="30"
                     rows="3"
                     placeholder="როლი თანამდებობაზე და ზოგადი აღწერა"
-                    style={
-                      dirtyFields[`educationDescription${index}`]
-                        ? errors[`educationDescription${index}`]
-                          ? { borderColor: "#E52F2F" }
-                          : { borderColor: "#98E37E" }
-                        : { borderColor: "#BCBCBC" }
-                    }
+                    style={borderErrorStyling(
+                      [`educationDescription${index}`],
+                      dirtyFields,
+                      errors
+                    )}
                   ></textarea>
                   {dirtyFields[`educationDescription${index}`] ? (
                     errors[`educationDescription${index}`] ? (
