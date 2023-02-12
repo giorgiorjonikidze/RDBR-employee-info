@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import useFormPersist from "react-hook-form-persist";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 import backArrow from "../assets/images/back-arrow.svg";
 import emailIcon from "../assets/images/icon-email.svg";
@@ -73,6 +73,8 @@ const Experience = () => {
     localStorage.clear();
     navigate("/");
   };
+
+
   
 
   return (
@@ -352,10 +354,10 @@ const Experience = () => {
               მეტი გამოცდილების დამატება
             </button>
             <div className="flex justify-between mt-[115px] mb-[65px]">
-              <button className="font-medium text-white bg-purple rounded-[4px] w-[151px] h-[48px]  ">
+              <Link to="/user" className="font-medium text-white bg-purple rounded-[4px] w-[151px] h-[48px]  flex justify-center items-center ">
                 უკან
-              </button>
-              <button className="font-medium text-white bg-purple rounded-[4px] w-[151px] h-[48px] ">
+              </Link>
+              <button type="submit" className="font-medium text-white bg-purple rounded-[4px] w-[151px] h-[48px] ">
                 შემდეგი
               </button>
             </div>

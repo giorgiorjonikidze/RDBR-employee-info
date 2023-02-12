@@ -256,9 +256,9 @@ const UserPage = () => {
               </label>
               <textarea
                 {...register("about_me")}
-                className="px-[16px] border-[1px] border-solid border-grey focus:outline-[2px] focus:outline-grey rounded-[4px] "
+                className="px-[16px] border-[1px] border-solid border-grey focus:outline-[2px] focus:outline-grey rounded-[4px] py-[13px]"
                 cols="30"
-                rows="3"
+                rows="6"
               ></textarea>
             </div>
             {/* ელფოსტა ///////////////////////////////////////////// */}
