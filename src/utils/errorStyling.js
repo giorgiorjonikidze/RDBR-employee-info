@@ -7,7 +7,7 @@ export const labelErrorStyling = (item, dirtyFields, errors) => {
       if (errors[item]) {
         return { color: "#E52F2F" };
       } else {
-        return { color: "#98E37E" };
+        return { color: "#000000" };
       }
     } else {
       return { color: "#000000" };

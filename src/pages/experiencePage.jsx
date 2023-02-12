@@ -1,11 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
 import useFormPersist from "react-hook-form-persist";
 import { useNavigate, Link } from "react-router-dom";
 
 import backArrow from "../assets/images/back-arrow.svg";
-import emailIcon from "../assets/images/icon-email.svg";
-import phoneIcon from "../assets/images/icon-phone.svg";
 import errorIcon from "../assets/images/icon-error.svg";
 import successIcon from "../assets/images/icon-success.svg";
 
@@ -13,6 +11,11 @@ import Resume from "../components/resume";
 import { useSelector, useDispatch } from "react-redux";
 import { resumeActions } from "./../store/store";
 
+import {
+  borderErrorStyling,
+  labelErrorStyling,
+  validationIcon,
+} from "../utils/errorStyling";
 
 const Experience = () => {
   const experienceCount = useSelector((state) => state.experienceFormCount);
@@ -29,28 +32,18 @@ const Experience = () => {
     formState: { dirtyFields, errors },
   } = useForm();
 
-  useFormPersist("user info", {
+  useFormPersist("form info", {
     watch,
     setValue,
     storage: window.localStorage,
   });
 
-  const [dirtyInputs, setDirtyInputs] = useState(dirtyFields);
-
   const watchForm = watch();
 
-  const onSubmit = (data) => {
+  const onSubmit = () => {
     navigate("/education");
   };
-  const onError = (errors) => {
-    console.log(" form errors", errors);
-    setDirtyInputs({
-      position0: true,
-      due_date0: true,
-      start_date0: true,
-      employer0: true,
-      description0: true,
-    });
+  const onError = () => {
     setValue("position0", watchForm.position0, { shouldDirty: true });
     setValue("due_date0", watchForm.due_date0, { shouldDirty: true });
     setValue("start_date0", watchForm.start_date0, { shouldDirty: true });
@@ -58,9 +51,7 @@ const Experience = () => {
     setValue("description0", watchForm.description0, { shouldDirty: true });
   };
 
-  // const [forms, setForms] = useState([1]);
   const addForm = () => {
-    // setForms([...forms, 1]);
     dispatch(resumeActions.addToExperience());
   };
 
@@ -73,9 +64,6 @@ const Experience = () => {
     localStorage.clear();
     navigate("/");
   };
-
-
-  
 
   return (
     <div className="mt-[45px] ml-[48px] flex">
@@ -100,13 +88,11 @@ const Experience = () => {
                 >
                   <label
                     className="font-bold mb-[8px]"
-                    style={
-                      dirtyFields[`position${index}`]
-                        ? errors[`position${index}`]
-                          ? { color: "#E52F2F" }
-                          : { color: "#98E37E" }
-                        : { color: "#000000" }
-                    }
+                    style={labelErrorStyling(
+                      `position${index}`,
+                      dirtyFields,
+                      errors
+                    )}
                   >
                     თანამდებობა
                   </label>
@@ -117,13 +103,11 @@ const Experience = () => {
                     })}
                     className="h-[48px] px-[16px] py-[13px] border-grey border-[1px] border-solid rounded-[4px] focus:outline-[2px] focus:outline-grey  mb-[8px]"
                     type="text"
-                    style={
-                      dirtyFields[`position${index}`]
-                        ? errors[`position${index}`]
-                          ? { borderColor: "#E52F2F" }
-                          : { borderColor: "#98E37E" }
-                        : { borderColor: "#BCBCBC" }
-                    }
+                    style={borderErrorStyling(
+                      `position${index}`,
+                      dirtyFields,
+                      errors
+                    )}
                     placeholder="დეველოპერი, დიზაინერი, ა.შ."
                   />
                   <p className="font-light text-sm text-dark">
@@ -152,13 +136,11 @@ const Experience = () => {
                 >
                   <label
                     className="font-bold mb-[8px]"
-                    style={
-                      dirtyFields[`employer${index}`]
-                        ? errors[`employer${index}`]
-                          ? { color: "#E52F2F" }
-                          : { color: "#98E37E" }
-                        : { color: "#000000" }
-                    }
+                    style={labelErrorStyling(
+                      `employer${index}`,
+                      dirtyFields,
+                      errors
+                    )}
                   >
                     დამსაქმებელი
                   </label>
@@ -168,34 +150,18 @@ const Experience = () => {
                       minLength: 2,
                     })}
                     className="h-[48px] px-[16px] py-[13px] border-grey border-[1px] border-solid rounded-[4px] focus:outline-[2px] focus:outline-grey mb-[8px]"
-                    style={
-                      dirtyFields[`employer${index}`]
-                        ? errors[`employer${index}`]
-                          ? { borderColor: "#E52F2F" }
-                          : { borderColor: "#98E37E" }
-                        : { borderColor: "#BCBCBC" }
-                    }
+                    style={borderErrorStyling(
+                      `employer${index}`,
+                      dirtyFields,
+                      errors
+                    )}
                     type="text"
                     placeholder="დამსაქმებელი"
                   />
                   <p className="font-light text-sm text-dark">
                     მინიმუმ 2 სიმბოლო
                   </p>
-                  {dirtyFields[`employer${index}`] ? (
-                    errors[`employer${index}`] ? (
-                      <img
-                        src={errorIcon}
-                        className="w-[18px] h-[18px] absolute top-[47px] right-[-27px]"
-                      />
-                    ) : (
-                      <img
-                        src={successIcon}
-                        className="w-[18px] h-[18px] absolute top-[47px] right-[13px]"
-                      />
-                    )
-                  ) : (
-                    <div></div>
-                  )}
+                  {validationIcon([`employer${index}`], dirtyFields, errors)}
                 </div>
                 {/* თარიღები  /////////////////////////////////// */}
                 <div className="flex gap-[56px] mt-[77px]">
@@ -206,13 +172,11 @@ const Experience = () => {
                   >
                     <label
                       className="font-bold mb-[8px]"
-                      style={
-                        dirtyFields[`start_date${index}`]
-                          ? errors[`start_date${index}`]
-                            ? { color: "#E52F2F" }
-                            : { color: "#98E37E" }
-                          : { color: "#000000" }
-                      }
+                      style={labelErrorStyling(
+                        `start_date${index}`,
+                        dirtyFields,
+                        errors
+                      )}
                     >
                       დაწყების რიცხვი
                     </label>
@@ -221,15 +185,14 @@ const Experience = () => {
                         required: true,
                       })}
                       className="w-[371px] h-[48px] px-[16px] py-[13px] border-grey border-[1px] border-solid rounded-[4px] focus:outline-[2px] focus:outline-grey  mb-[8px]"
-                      style={
-                        dirtyFields[`start_date${index}`]
-                          ? errors[`start_date${index}`]
-                            ? { borderColor: "#E52F2F" }
-                            : { borderColor: "#98E37E" }
-                          : { borderColor: "#BCBCBC" }
-                      }
+                      style={borderErrorStyling(
+                        `start_date${index}`,
+                        dirtyFields,
+                        errors
+                      )}
                       type="date"
                     />
+                    
                     {dirtyFields[`start_date${index}`] ? (
                       errors[`start_date${index}`] ? (
                         <img
@@ -253,13 +216,11 @@ const Experience = () => {
                   >
                     <label
                       className="font-bold mb-[8px]"
-                      style={
-                        dirtyFields[`due_date${index}`]
-                          ? errors[`due_date${index}`]
-                            ? { color: "#E52F2F" }
-                            : { color: "#98E37E" }
-                          : { color: "#000000" }
-                      }
+                      style={labelErrorStyling(
+                        `due_date${index}`,
+                        dirtyFields,
+                        errors
+                      )}
                     >
                       დამთავრების რიცხვი
                     </label>
@@ -268,13 +229,11 @@ const Experience = () => {
                         required: true,
                       })}
                       className="w-[371px] h-[48px] px-[16px] py-[13px] border-grey border-[1px] border-solid rounded-[4px] focus:outline-[2px] focus:outline-grey  mb-[8px] "
-                      style={
-                        dirtyFields[`due_date${index}`]
-                          ? errors[`due_date${index}`]
-                            ? { borderColor: "#E52F2F" }
-                            : { borderColor: "#98E37E" }
-                          : { borderColor: "#BCBCBC" }
-                      }
+                      style={borderErrorStyling(
+                        `due_date${index}`,
+                        dirtyFields,
+                        errors
+                      )}
                       type="date"
                     />
                     {dirtyFields[`due_date${index}`] ? (
@@ -301,13 +260,11 @@ const Experience = () => {
                 >
                   <label
                     className="font-bold mb-[8px]"
-                    style={
-                      dirtyFields[`description${index}`]
-                        ? errors[`description${index}`]
-                          ? { color: "#E52F2F" }
-                          : { color: "#98E37E" }
-                        : { color: "#000000" }
-                    }
+                    style={labelErrorStyling(
+                      `description${index}`,
+                      dirtyFields,
+                      errors
+                    )}
                   >
                     აღწერა
                   </label>
@@ -316,13 +273,11 @@ const Experience = () => {
                       required: true,
                     })}
                     className="border-[1px] border-solid border-grey focus:outline-[2px] focus:outline-grey rounded-[4px] box-border px-[16px] py-[13px]"
-                    style={
-                      dirtyFields[`description${index}`]
-                        ? errors[`description${index}`]
-                          ? { borderColor: "#E52F2F" }
-                          : { borderColor: "#98E37E" }
-                        : { borderColor: "#BCBCBC" }
-                    }
+                    style={borderErrorStyling(
+                      `description${index}`,
+                      dirtyFields,
+                      errors
+                    )}
                     cols="30"
                     rows="3"
                     placeholder="როლი თანამდებობაზე და ზოგადი აღწერა"
@@ -354,10 +309,16 @@ const Experience = () => {
               მეტი გამოცდილების დამატება
             </button>
             <div className="flex justify-between mt-[115px] mb-[65px]">
-              <Link to="/user" className="font-medium text-white bg-purple rounded-[4px] w-[151px] h-[48px]  flex justify-center items-center ">
+              <Link
+                to="/user"
+                className="font-medium text-white bg-purple rounded-[4px] w-[151px] h-[48px]  flex justify-center items-center "
+              >
                 უკან
               </Link>
-              <button type="submit" className="font-medium text-white bg-purple rounded-[4px] w-[151px] h-[48px] ">
+              <button
+                type="submit"
+                className="font-medium text-white bg-purple rounded-[4px] w-[151px] h-[48px] "
+              >
                 შემდეგი
               </button>
             </div>
