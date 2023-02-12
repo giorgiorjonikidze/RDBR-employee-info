@@ -1,5 +1,7 @@
 import emailIcon from "../assets/images/icon-email.svg";
 import phoneIcon from "../assets/images/icon-phone.svg";
+import bottomLogo from "../assets/images/bottom-logo.svg";
+
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 
@@ -96,6 +98,7 @@ const Resume = ({ watchForm, selected}) => {
               </div>
             ))}
           </div>
+          <img src={bottomLogo} className="w-[42px] mt-[50px]" />
         </div>
         <div>
           {getImage && (

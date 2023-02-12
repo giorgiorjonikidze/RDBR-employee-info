@@ -89,11 +89,13 @@ const UserPage = () => {
     trigger();
   };
 
+  
+
   return (
     <div className="mt-[45px] ml-[48px] flex">
       {/* left section///////////  */}
       <section className="flex gap-[61px] mt-[]">
-        <img className="self-start" src={backArrow} alt="" />
+          <img src={backArrow} className="self-start"/>
         <div className="w-[798px]">
           <div className="flex justify-between mb-[12px] border-b-[1px] border-solid border-[#1A1A1A] pb-[12px]">
             <h1 className="font-bold text-xxl ">პირადი ინფო</h1>

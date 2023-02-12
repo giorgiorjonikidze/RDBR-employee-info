@@ -19,7 +19,10 @@ module.exports = {
       md: "16px", 
       xl: "18px",
       xxl: "24px"
-    }
+    },
+    boxShadow: {
+      'extra-large': '0px 4px 28px 0px rgba(0, 0, 0, 0.25)',
+    },
     
   },
   plugins: [],

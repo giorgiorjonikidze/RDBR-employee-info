@@ -69,18 +69,7 @@ const Experience = () => {
     console.log("trigger");
   };
 
-  // useEffect(() => {
-  //   const formsLength = JSON.parse(localStorage.getItem("forms length"));
-  //   if (formsLength) {
-  //     setForms(formsLength);
-  //   }
-  // }, []);
-
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     localStorage.setItem("forms length", JSON.stringify(forms));
-  //   }, 500);
-  // }, [forms]);
+  
 
   
 
@@ -88,6 +77,7 @@ const Experience = () => {
     <div className="mt-[45px] ml-[48px] flex">
       {/* left section///////////  */}
       <section className="flex gap-[61px] mt-[]">
+
         <img className="self-start_date" src={backArrow} alt="" />
         <div className="w-[798px]">
           <div className="flex justify-between  border-b-[1px] border-solid border-[#1A1A1A] pb-[12px] mb-[60px]">

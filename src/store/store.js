@@ -1,5 +1,6 @@
 import { createSlice, configureStore } from "@reduxjs/toolkit";
 
+
 const resumeSlice = createSlice({
   name: "resume",
   initialState: {
@@ -13,12 +14,13 @@ const resumeSlice = createSlice({
     addToEducation(state) {
       state.eduCationFormCount.push(1);
     },
+    
   },
 });
 
 const persistedState = localStorage.getItem("resume")
   ? JSON.parse(localStorage.getItem("resume"))
-  : { experienceFormCount: [1], eduCationFormCount: [1], };
+  : { experienceFormCount: [1], eduCationFormCount: [1] };
 
 const store = configureStore({
   reducer: resumeSlice.reducer,
