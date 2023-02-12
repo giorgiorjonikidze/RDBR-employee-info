@@ -25,12 +25,13 @@ const Experience = () => {
   const reduxImage = useSelector((state) => state.image);
 
   const [fetchedSelectData, setFetchedSelectData] = useState([]);
-  const [selected, setSelected] = useState("");
+  const [selectedId, setSelectedId] = useState("");
+  const [selectedTitle, setSelectedTitle] = useState("");
   const [invalidSelect, setInvalidSelect] = useState(true);
   const [selectIsTuched, setSelectIsTuched] = useState(false);
 
   const validateSelect = () => {
-    if (selected === "") {
+    if (selectedId === "") {
       return true;
     }
     return false;
@@ -58,7 +59,7 @@ const Experience = () => {
 
     const imageFromLocalStorage = dataURLToImage("image result");
 
-    const trans = transformObject(data, selected);
+    const trans = transformObject(data, selectedId);
     const allData = { ...trans, ...{ image: imageFromLocalStorage } };
 
     console.log("allData", allData);
@@ -101,38 +102,38 @@ const Experience = () => {
   };
 
   useEffect(() => {
-    axios(degreeUrl)
-      .then((response) =>
-        setFetchedSelectData(
-          response.data.map((item) => (
-            <option key={item.title} value={item.id}>
-              {item.title}
-            </option>
-          ))
-        )
-      )
-      .catch((err) => console.log(err));
+    const fetchData = async () => {
+      try {
+        const response = await axios(degreeUrl);
+        setFetchedSelectData(response.data);
+        const value = localStorage.getItem("selectedValue");
+        const degreeTitle = response.data[value-1].title;
+        if (value) {
+          setSelectedId(value);
+          setSelectedTitle(degreeTitle);
+          setInvalidSelect(false);
+          setSelectIsTuched(true);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchData();
   }, []);
 
   const selectChangeHandler = (e) => {
     const { value } = e.target;
-    setSelected(value);
-    console.log(value);
+    const degreeTitle = fetchedSelectData[value-1].title;
     setInvalidSelect(false);
     setSelectIsTuched(true);
 
-    setSelected(value);
+    setSelectedTitle(degreeTitle);
+    setSelectedId(value);
+
+    console.log(degreeTitle);
     localStorage.setItem("selectedValue", value);
   };
 
-  useEffect(() => {
-    const value = localStorage.getItem("selectedValue");
-    if (value) {
-      setSelected(value);
-      setInvalidSelect(false);
-      setSelectIsTuched(true);
-    }
-  }, []);
 
   const inputTriggerHandler = () => {
     trigger();
@@ -142,8 +143,6 @@ const Experience = () => {
     localStorage.clear();
     navigate("/");
   };
-
- 
 
   return (
     <div className="mt-[45px] ml-[48px] flex">
@@ -219,7 +218,7 @@ const Experience = () => {
                   {/* select ///////////////////////////////////////////// */}
                   <div className="relative">
                     <select
-                      value={selected}
+                      value={selectedId}
                       onChange={selectChangeHandler}
                       className="w-[371px] h-[48px] px-[16px] py-[13px] border-grey border-[1px] border-solid rounded-[4px] focus:outline-[2px] focus:outline-grey  mb-[8px] mt-[30px] "
                       style={
@@ -233,7 +232,11 @@ const Experience = () => {
                       <option hidden className="opacity-60 text-xxl">
                         აირჩიეთ ხარისხი
                       </option>
-                      {fetchedSelectData}
+                      {fetchedSelectData.map((item) => (
+                        <option key={item.title} value={item.id}>
+                          {item.title}
+                        </option>
+                      ))}
                     </select>
                     {selectIsTuched ? (
                       invalidSelect ? (
@@ -359,17 +362,23 @@ const Experience = () => {
               სხვა სასწავლებლის დამატება
             </button>
             <div className="flex justify-between mt-[115px] mb-[65px]">
-              <Link to="/experience" className="font-medium text-white bg-purple rounded-[4px] w-[151px] h-[48px] flex justify-center items-center ">
+              <Link
+                to="/experience"
+                className="font-medium text-white bg-purple rounded-[4px] w-[151px] h-[48px] flex justify-center items-center "
+              >
                 უკან
               </Link>
-              <button type="submit" className="font-medium text-white bg-purple rounded-[4px] w-[151px] h-[48px] ">
+              <button
+                type="submit"
+                className="font-medium text-white bg-purple rounded-[4px] w-[151px] h-[48px] "
+              >
                 შემდეგი
               </button>
             </div>
           </form>
         </div>
       </section>
-      <Resume watchForm={watchForm} selected={selected} />
+      <Resume watchForm={watchForm} selected={selectedTitle} />
     </div>
   );
 };

@@ -1,21 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import useFormPersist from "react-hook-form-persist";
 import { useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
 
 import Resume from "../components/resume";
 
 import backArrow from "../assets/images/back-arrow.svg";
-import emailIcon from "../assets/images/icon-email.svg";
-import phone_numberIcon from "../assets/images/icon-phone.svg";
 import errorIcon from "../assets/images/icon-error.svg";
 import successIcon from "../assets/images/icon-success.svg";
 
-import { resumeActions } from "./../store/store";
+import {borderErrorStyling, labelErrorStyling, validationIcon} from "../utils/errorStyling"
 
 const UserPage = () => {
-  const [imageResult, setImageResult] = useState(null);
   const [imageError, setImageError] = useState(false);
 
   const navigate = useNavigate();
@@ -28,16 +24,8 @@ const UserPage = () => {
     if (file) {
       reader.readAsDataURL(file);
       reader.onloadend = () => {
-        setImageResult(reader.result);
         localStorage.setItem("image result", reader.result);
       };
-    }
-  };
-
-  const retrieveImageFromLocalStorage = () => {
-    const imageFromLocalStorage = localStorage.getItem("image result");
-    if (imageFromLocalStorage) {
-      setImageResult(imageFromLocalStorage);
     }
   };
 
@@ -50,9 +38,7 @@ const UserPage = () => {
     formState: { dirtyFields, errors },
   } = useForm();
 
-  const [dirtyInputs, setDirtyInputs] = useState(dirtyFields);
-
-  useFormPersist("user info", {
+  useFormPersist("form info", {
     watch,
     setValue,
     storage: window.localStorage,
@@ -60,30 +46,17 @@ const UserPage = () => {
 
   const watchForm = watch();
 
-  const onSubmit = (data) => {
-    // console.log("form sumbited", data);
-
+  const onSubmit = () => {
     navigate("/experience");
   };
-  const onError = (data) => {
-    console.log(" form errors", data);
-    setDirtyInputs({
-      name: true,
-      surname: true,
-      file: true,
-      email: true,
-      phone_number: true,
-    });
+
+  const onError = () => {
     setValue("name", watchForm.name, { shouldDirty: true });
     setValue("surname", watchForm.surname, { shouldDirty: true });
     setValue("email", watchForm.email, { shouldDirty: true });
     setValue("phone_number", watchForm.phone_number, { shouldDirty: true });
     setValue("file", watchForm.file, { shouldDirty: true });
   };
-
-  // useEffect(() => {
-  //   trigger();
-  // }, [errors]);
 
   const inputTriggerHandler = () => {
     trigger();
@@ -115,13 +88,7 @@ const UserPage = () => {
               >
                 <label
                   className="font-bold mb-[8px]"
-                  style={
-                    dirtyFields.name
-                      ? errors.name
-                        ? { color: "#E52F2F" }
-                        : { color: "#98E37E" }
-                      : { color: "#000000" }
-                  }
+                  style={labelErrorStyling("name", dirtyFields, errors)}
                 >
                   სახელი
                 </label>
@@ -130,36 +97,15 @@ const UserPage = () => {
                     required: true,
                     pattern: /^[ა-ჰ]{2,}$/,
                   })}
-                  //   onChange={inputTriggerHandler}
                   className="w-[371px] h-[48px] px-[16px] py-[13px] border-grey border-[1px] border-solid rounded-[4px] focus:outline-[2px] focus:outline-grey  mb-[8px]"
                   type="text"
                   placeholder="ანზორ"
-                  style={
-                    dirtyFields.name
-                      ? errors.name
-                        ? { borderColor: "#E52F2F" }
-                        : { borderColor: "#98E37E" }
-                      : { borderColor: "#BCBCBC" }
-                  }
+                  style={borderErrorStyling("name", dirtyFields, errors)}
                 />
                 <p className="font-light text-sm text-dark">
                   მინიმუმ 2 ასო, ქართული ასოები
                 </p>
-                {dirtyFields.name ? (
-                  errors.name ? (
-                    <img
-                      src={errorIcon}
-                      className="w-[18px] h-[18px] absolute top-[47px] right-[-27px]"
-                    />
-                  ) : (
-                    <img
-                      src={successIcon}
-                      className="w-[18px] h-[18px] absolute top-[47px] right-[13px]"
-                    />
-                  )
-                ) : (
-                  <div></div>
-                )}
+                {validationIcon("name", dirtyFields, errors)}
               </div>
               {/* გვარი /////////////////////////// */}
               <div
@@ -168,13 +114,7 @@ const UserPage = () => {
               >
                 <label
                   className="font-bold mb-[8px]"
-                  style={
-                    dirtyFields.surname
-                      ? errors.surname
-                        ? { color: "#E52F2F" }
-                        : { color: "#98E37E" }
-                      : { color: "#000000" }
-                  }
+                  style={labelErrorStyling("surname", dirtyFields, errors)}
                 >
                   გვარი
                 </label>
@@ -186,32 +126,12 @@ const UserPage = () => {
                   className="w-[371px] h-[48px] px-[16px] py-[13px] border-grey border-[1px] border-solid rounded-[4px] focus:outline-[2px] focus:outline-grey  mb-[8px]"
                   type="text"
                   placeholder="მელაძე"
-                  style={
-                    dirtyFields.surname
-                      ? errors.surname
-                        ? { borderColor: "#E52F2F" }
-                        : { borderColor: "#98E37E" }
-                      : { borderColor: "#BCBCBC" }
-                  }
+                  style={borderErrorStyling("surname", dirtyFields, errors)}
                 />
                 <p className="font-light text-sm text-dark">
                   მინიმუმ 2 ასო, ქართული ასოები
                 </p>
-                {dirtyFields.surname ? (
-                  errors.surname ? (
-                    <img
-                      src={errorIcon}
-                      className="w-[18px] h-[18px] absolute top-[47px] right-[-27px]"
-                    />
-                  ) : (
-                    <img
-                      src={successIcon}
-                      className="w-[18px] h-[18px] absolute top-[47px] right-[13px]"
-                    />
-                  )
-                ) : (
-                  <div></div>
-                )}
+                {validationIcon("surname", dirtyFields, errors)}
               </div>
             </div>
             {/* ფაილის ატვირთვა //////////////////////////  */}
@@ -235,7 +155,6 @@ const UserPage = () => {
                 id="file-input"
                 accept="image/*"
                 onChange={handleFileChange}
-                ref={retrieveImageFromLocalStorage}
               />
               {dirtyFields.file ? (
                 !imageError ? (
@@ -268,13 +187,7 @@ const UserPage = () => {
             >
               <label
                 className="font-bold mb-[8px]"
-                style={
-                  dirtyFields.email
-                    ? errors.email
-                      ? { color: "#E52F2F" }
-                      : { color: "#98E37E" }
-                    : { color: "#000000" }
-                }
+                style={labelErrorStyling("email", dirtyFields, errors)}
               >
                 ელ.ფოსტა
               </label>
@@ -286,32 +199,12 @@ const UserPage = () => {
                 className="h-[48px] px-[16px] py-[13px] border-grey border-[1px] border-solid rounded-[4px] focus:outline-[2px] focus:outline-grey mb-[8px]"
                 type="text"
                 placeholder="anzorr666@redberry.ge"
-                style={
-                  dirtyFields.email
-                    ? errors.email
-                      ? { borderColor: "#E52F2F" }
-                      : { borderColor: "#98E37E" }
-                    : { borderColor: "#BCBCBC" }
-                }
+                style={borderErrorStyling("email", dirtyFields, errors)}
               />
               <p className="font-light text-sm text-dark">
                 უნდა მთავრდებოდეს @redberry.ge-ით
               </p>
-              {dirtyFields.email ? (
-                errors.email ? (
-                  <img
-                    src={errorIcon}
-                    className="w-[18px] h-[18px] absolute top-[47px] right-[-27px]"
-                  />
-                ) : (
-                  <img
-                    src={successIcon}
-                    className="w-[18px] h-[18px] absolute top-[47px] right-[13px]"
-                  />
-                )
-              ) : (
-                <div></div>
-              )}
+              {validationIcon("email", dirtyFields, errors)}
             </div>
             <div
               className="flex flex-col mt-[13px] relative"
@@ -319,13 +212,7 @@ const UserPage = () => {
             >
               <label
                 className="font-bold mb-[8px]"
-                style={
-                  dirtyFields.phone_number
-                    ? errors.phone_number
-                      ? { color: "#E52F2F" }
-                      : { color: "#98E37E" }
-                    : { color: "#000000" }
-                }
+                style={labelErrorStyling("phone_number", dirtyFields, errors)}
               >
                 მობილურის ნომერი
               </label>
@@ -337,32 +224,12 @@ const UserPage = () => {
                 className="h-[48px] px-[16px] py-[13px] border-grey border-[1px] border-solid rounded-[4px] focus:outline-[2px] focus:outline-grey  mb-[8px]"
                 type="text"
                 placeholder="+995 551 12 34 56"
-                style={
-                  dirtyFields.phone_number
-                    ? errors.phone_number
-                      ? { borderColor: "#E52F2F" }
-                      : { borderColor: "#98E37E" }
-                    : { borderColor: "#BCBCBC" }
-                }
+                style={borderErrorStyling("phone_number", dirtyFields, errors)}
               />
               <p className="font-light text-sm text-dark">
                 უნდა აკმაყოფილებდეს ქართული მობილურის ნომრის ფორმატს
               </p>
-              {dirtyFields.phone_number ? (
-                errors.phone_number ? (
-                  <img
-                    src={errorIcon}
-                    className="w-[18px] h-[18px] absolute top-[47px] right-[-27px]"
-                  />
-                ) : (
-                  <img
-                    src={successIcon}
-                    className="w-[18px] h-[18px] absolute top-[47px] right-[13px]"
-                  />
-                )
-              ) : (
-                <div></div>
-              )}
+              {validationIcon("phone_number", dirtyFields, errors)}
             </div>
             <button
               type="submit"
@@ -373,7 +240,7 @@ const UserPage = () => {
           </form>
         </div>
       </section>
-      <Resume watchForm={watchForm} image={imageResult} />
+      <Resume watchForm={watchForm} />
     </div>
   );
 };

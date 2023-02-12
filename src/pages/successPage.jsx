@@ -107,18 +107,16 @@ const SuccessPage = () => {
               <div key={index}>
                 <div>
                   <div className="flex font-bold mb-[7px]">
-                    <p className="mr-[5px]">
-                      {item.institute}
-                      {""}
-                      {item.degree}
-                    </p>
+                    <p>{item.institute}</p>
+                    <p className="mr-[4px]">, </p>
+                    <p> {item.degree}</p>
                   </div>
                   <div className="flex text-[#909090] mb-[16px]">
                     <p>{item.due_date}</p>
                   </div>
                   <p className="w-[662px] mb-[19px]">{item.description}</p>
                 </div>
-                <div className="w-[662px] h-[0.5px] bg-[#C8C8C8] mt-[19px]"></div>
+                <div className="w-[662px] h-[0.5px] bg-[#C8C8C8] mt-[19px] mb-[25px]"></div>
               </div>
             ))}
           </div>

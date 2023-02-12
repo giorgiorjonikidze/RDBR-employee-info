@@ -1,27 +1,30 @@
 import React, { useState } from "react";
 
 const Test = () => {
-  const [image, setImage] = useState(null);
+  const [selects, setSelects] = useState([]);
 
-  const handleImageRetrieval = () => {
-    const dataURL = localStorage.getItem("image result");
-    const image = dataURLToImage(dataURL);
-    setImage(image);
+  const handleAddSelect = () => {
+    setSelects([...selects, { value: "" }]);
   };
 
-  const dataURLToImage = (dataURL) => {
-    const parts = dataURL.split(",");
-    const contentType = parts[0].split(":")[1].split(";")[0];
-    const data = parts[1];
-    const byteArray = Uint8Array.from(atob(data), (c) => c.charCodeAt(0));
-
-    return new File([byteArray], "image.png", { type: contentType });
+  const handleSelectChange = (event, index) => {
+    const newSelects = [...selects];
+    newSelects[index].value = event.target.value;
+    setSelects(newSelects);
+    localStorage.setItem("selects", JSON.stringify(newSelects));
   };
 
   return (
     <div>
-      <button onClick={handleImageRetrieval}>Retrieve Image</button>
-      {image && <img src={URL.createObjectURL(image)} alt="image" />}
+      <button onClick={handleAddSelect}>Add Select</button>
+      {selects.map((select, index) => (
+        <select key={index} value={select.value} onChange={(e) => handleSelectChange(e, index)}>
+          <option value="">Select an option</option>
+          <option value="option1">Option 1</option>
+          <option value="option2">Option 2</option>
+          <option value="option3">Option 3</option>
+        </select>
+      ))}
     </div>
   );
 };

@@ -5,19 +5,18 @@ import bottomLogo from "../assets/images/bottom-logo.svg";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 
-const Resume = ({ watchForm, selected}) => {
+const Resume = ({ watchForm, selected }) => {
   const getImage = localStorage.getItem("image result");
 
   const expCount = useSelector((state) => state.experienceFormCount);
   const eduCount = useSelector((state) => state.eduCationFormCount);
-
 
   return (
     <div>
       <div className="ml-[200px] flex">
         <div className="w-[423px] flex flex-col">
           {/* სახელი გვარი ///////////////////////// */}
-          <div className="flex gap-[20px] mb-[17px]">
+          <div className="flex gap-[20px] mb-[17px] flex-wrap">
             <p className="font-bold text-red_font text-[34px] ">
               {watchForm.name}
             </p>
@@ -47,64 +46,106 @@ const Resume = ({ watchForm, selected}) => {
                 ᲩᲔᲛ ᲨᲔᲡᲐᲮᲔᲑ
               </p>
               <p>{watchForm.about_me}</p>
+              <div className="w-[662px] h-[0.5px] bg-[#C8C8C8] mt-[19px]"></div>
             </div>
           )}
-          <div className="mt-[50px]">
-            <div>
+
+          {/* experience ////////////////////////////////////////////////////  */}
+          {/* experience ////////////////////////////////////////////////////  */}
+
+          <div>
+            <div className="mt-[24px] mb-[15px]">
               {(watchForm.position0 ||
-                watchForm.start_date ||
-                watchForm.due_date ||
-                watchForm.employer ||
-                watchForm.description) && (
+                watchForm.start_date0 ||
+                watchForm.due_date0 ||
+                watchForm.employer0 ||
+                watchForm.description0) && (
                 <p className="font-bold text-xl text-red_font mb-[15px]">
-                  გამოცდილება
+                  ᲒᲐᲛᲝᲪᲓᲘᲚᲔᲑᲐ
                 </p>
               )}
             </div>
             {expCount?.map((form, index) => (
               <div key={index}>
-                {/* <div className="w-[662px] h-[1px] bg-[#C8C8C8]"></div> */}
-                <div className="mt-[50px]">
+                <div className="mt-[15px]">
                   <div className="flex font-bold mb-[7px]">
-                    <p className="mr-[5px]">{watchForm[`position${index}`]}</p>
+                    <p>{watchForm[`position${index}`]}</p>
+                    {watchForm[`employer${index}`] &&
+                    watchForm[`position${index}`][
+                      watchForm[`position${index}`]?.length - 1
+                    ] != "," ? (
+                      <p className="mr-[4px]">,</p>
+                    ) : (
+                      <p className="mr-[4px]"></p>
+                    )}
                     <p>{watchForm[`employer${index}`]}</p>
                   </div>
                   <div className="flex text-[#909090] mb-[16px]">
-                    <p>{watchForm[`start_date${index}`]} </p>
-                    <p>{watchForm[`due_date${index}`]}</p>
+                    <p className="mr-[4px]">
+                      {watchForm[`start_date${index}`]}{" "}
+                    </p>
+                    {watchForm[`due_date${index}`] && "-"}
+                    <p className="ml-[4px]">{watchForm[`due_date${index}`]}</p>
                   </div>
                   <p className="w-[662px] mb-[19px]">
                     {watchForm[`description${index}`]}
                   </p>
                 </div>
+                <div className="w-[662px] h-[0.5px] bg-[#C8C8C8] mt-[32px]"></div>
               </div>
             ))}
           </div>
           <div>
-            {eduCount?.map((form, index) => (
-              <div key={index}>
-                {/* <div className="w-[662px] h-[1px] bg-[#C8C8C8]"></div> */}
-                <div className="mt-[50px]">
-                  <div className="flex font-bold mb-[7px]">
-                    <p className="mr-[5px]">{watchForm[`institute${index}`]}{""}{selected}</p>
-                  </div>
-                  <div className="flex text-[#909090] mb-[16px]">
-                    <p>{watchForm[`institute_due_date${index}`]}</p>
-                  </div>
-                  <p className="w-[662px] mb-[19px]">
-                    {watchForm[`educationDescription${index}`]}
+            {/* education ////////////////////////////////////////////// */}
+            {/* education ////////////////////////////////////////////// */}
+            <div>
+              <div className="mt-[24px] mb-[15px]">
+                {(watchForm.position0 ||
+                  watchForm.start_date0 ||
+                  watchForm.due_date0 ||
+                  watchForm.employer0 ||
+                  watchForm.description0) && (
+                  <p className="font-bold text-xl text-red_font mb-[15px]">
+                    ᲒᲐᲜᲐᲗᲚᲔᲑᲐ
                   </p>
-                </div>
+                )}
               </div>
-            ))}
+              {eduCount?.map((form, index) => (
+                <div key={index}>
+                  <div className="mt-[15px]">
+                    <div className="flex font-bold mb-[7px]">
+                      <p>
+                        {watchForm[`institute${index}`]}
+                      </p>
+                      {selected &&
+                    watchForm[`institute${index}`][
+                      watchForm[`institute${index}`]?.length - 1
+                    ] != "," ? (
+                      <p className="mr-[4px]">,</p>
+                    ) : (
+                      <p className="mr-[4px]"></p>
+                    )}
+                      <p>{selected}</p>
+                    </div>
+                    <div className="flex text-[#909090] mb-[16px]">
+                      <p>{watchForm[`institute_due_date${index}`]}</p>
+                    </div>
+                    <p className="w-[662px] mb-[19px]">
+                      {watchForm[`educationDescription${index}`]}
+                    </p>
+                  </div>
+                  <div className="w-[662px] h-[0.5px] bg-[#C8C8C8] mt-[32px]"></div>
+                </div>
+              ))}
+            </div>
           </div>
-          <img src={bottomLogo} className="w-[42px] mt-[50px]" />
+          {/* <img src={bottomLogo} className="w-[42px] mt-[50px]" /> */}
         </div>
         <div>
           {getImage && (
             <img
               src={getImage}
-              className="w-[246px] h-[246px] rounded-full object-cover flex-grow-1"
+              className="w-[246px] h-[246px] max-w-[246px] rounded-full object-cover flex-grow-1"
             />
           )}
         </div>
