@@ -9,6 +9,7 @@ import backArrow from "../assets/images/back-arrow.svg";
 import errorIcon from "../assets/images/icon-error.svg";
 import successIcon from "../assets/images/icon-success.svg";
 
+
 import {
   borderErrorStyling,
   labelErrorStyling,
@@ -18,10 +19,6 @@ import {
 const UserPage = () => {
   const [imageError, setImageError] = useState(false);
   const [dirtyImage, setDirtyImage] = useState(false);
-
-  console.log("imageError", imageError)
-  console.log("dirtyImage", dirtyImage)
-
 
   const [image, setImage] = useState(null);
 
@@ -58,7 +55,7 @@ const UserPage = () => {
     trigger,
     getValues,
     setValue,
-    formState: { dirtyFields, errors, touchedFields, isValidating },
+    formState: { dirtyFields, errors},
   } = useForm();
 
   useFormPersist("form info", {
@@ -70,13 +67,11 @@ const UserPage = () => {
   const watchForm = watch();
 
   const onSubmit = () => {
-    setDirtyImage(true)
+    setDirtyImage(true);
     if (imageError) {
       navigate("/experience");
     }
   };
-
-
 
   const onError = () => {
     setDirtyImage(true);
@@ -85,14 +80,6 @@ const UserPage = () => {
     setValue("email", watchForm.email, { shouldDirty: true });
     setValue("phone_number", watchForm.phone_number, { shouldDirty: true });
   };
-
-  // useEffect(() => {
-  //   setValue("name", watchForm.name, { shouldDirty: true });
-  //   setValue("surname", watchForm.surname, { shouldDirty: true });
-  //   setValue("email", watchForm.email, { shouldDirty: true });
-  //   setValue("phone_number", watchForm.phone_number, { shouldDirty: true });
-  //   setValue("file", watchForm.file, { shouldDirty: true });
-  // }, []);
 
   const inputTriggerHandler = () => {
     trigger();
@@ -119,6 +106,7 @@ const UserPage = () => {
   useEffect(() => {
     formatInputValue(watchForm.phone_number);
   }, [watchForm.phone_number]);
+
   return (
     <div className="mt-[45px] ml-[48px] flex">
       {/* left section///////////  */}
@@ -292,7 +280,7 @@ const UserPage = () => {
           </form>
         </div>
       </section>
-      <Resume watchForm={watchForm} imageUploaded={image}/>
+      <Resume watchForm={watchForm} imageUploaded={image} />
     </div>
   );
 };

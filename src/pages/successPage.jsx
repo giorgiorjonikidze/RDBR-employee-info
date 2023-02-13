@@ -106,7 +106,7 @@ const SuccessPage = () => {
             {formData.educations.map((item, index) => (
               <div key={index}>
                 <div>
-                  <div className="flex font-bold mb-[7px]">
+                  <div className="flex font-bold mb-[7px] flex-wrap">
                     <p>{item.institute}</p>
                     <p className="mr-[4px]">, </p>
                     <p> {item.degree}</p>

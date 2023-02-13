@@ -4,15 +4,17 @@ import bottomLogo from "../assets/images/bottom-logo.svg";
 
 import { useSelector } from "react-redux";
 
-const Resume = ({ watchForm, imageUploaded }) => {
+const Resume = ({ watchForm, imageUploaded, fetchedSelectData }) => {
   const getImage = localStorage.getItem("image result");
 
   const expCount = useSelector((state) => state.experienceFormCount);
   const eduCount = useSelector((state) => state.eduCationFormCount);
 
+  
+
   return (
-    <div>
-      <div className="ml-[200px] flex">
+    <div className="ml-[200px] flex flex-col justify-between min-h-[800px] ">
+      <div className="flex">
         <div className="w-[423px] flex flex-col">
           {/* სახელი გვარი ///////////////////////// */}
           <div className="flex gap-[20px] mb-[17px] flex-wrap">
@@ -118,9 +120,9 @@ const Resume = ({ watchForm, imageUploaded }) => {
               {eduCount?.map((form, index) => (
                 <div key={index}>
                   <div className="mt-[15px]">
-                    <div className="flex font-bold mb-[7px]">
+                    <div className="flex font-bold mb-[7px] flex-wrap">
                       <p>{watchForm[`institute${index}`]}</p>
-                      {watchForm[`degree${index}`] &&
+                      {watchForm[`degree_id${index}`] &&
                       watchForm[`institute${index}`] &&
                       watchForm[`institute${index}`][
                         watchForm[`institute${index}`]?.length - 1
@@ -129,7 +131,7 @@ const Resume = ({ watchForm, imageUploaded }) => {
                       ) : (
                         <p className="mr-[4px]"></p>
                       )}
-                      <p>{watchForm[`degree${index}`]}</p>
+                      <p>{fetchedSelectData ? fetchedSelectData[watchForm[`degree_id${index}`] - 1]?.title : ""}</p>
                     </div>
                     <div className="flex text-[#909090] mb-[16px]">
                       <p>{watchForm[`institute_due_date${index}`]}</p>
@@ -148,7 +150,6 @@ const Resume = ({ watchForm, imageUploaded }) => {
               ))}
             </div>
           </div>
-          {/* <img src={bottomLogo} className="w-[42px] mt-[50px]" /> */}
         </div>
         <div>
           {getImage ? (
@@ -175,6 +176,7 @@ const Resume = ({ watchForm, imageUploaded }) => {
           )}
         </div>
       </div>
+      <img src={bottomLogo} className="w-[50px] mt-[200px] mb-[42px]" />
     </div>
   );
 };

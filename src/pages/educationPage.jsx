@@ -30,17 +30,6 @@ const Experience = () => {
   const dispatch = useDispatch();
 
   const [fetchedSelectData, setFetchedSelectData] = useState([]);
-  // const [selectedId, setSelectedId] = useState([{ value: "" }]);
-  // const [selectedTitle, setSelectedTitle] = useState("");
-  // const [invalidSelect, setInvalidSelect] = useState(true);
-  // const [selectIsTuched, setSelectIsTuched] = useState(false);
-
-  // const validateSelect = () => {
-  //   if (selectedId === "") {
-  //     return true;
-  //   }
-  //   return false;
-  // };
 
   const {
     register,
@@ -60,15 +49,13 @@ const Experience = () => {
 
   const onSubmit = (data) => {
     console.log("form sumbited", data);
-    // const selectError = validateSelect();
-    // setSelectIsTuched(true);
 
     const imageFromLocalStorage = dataURLToImage("image result");
 
     const trans = transformObject(data);
     const allData = { ...trans, ...{ image: imageFromLocalStorage } };
 
-    console.log("allData", allData);
+    console.log("allData", allData)
 
     axios({
       method: "post",
@@ -88,7 +75,6 @@ const Experience = () => {
   };
 
   const onError = (errors) => {
-    console.log(" form errors", errors);
     setValue("educationDescription", watchForm.educationDescription, {
       shouldDirty: true,
     });
@@ -96,36 +82,21 @@ const Experience = () => {
       shouldDirty: true,
     });
     setValue("institute", watchForm.institute, { shouldDirty: true });
-    // const selectError = validateSelect();
-    // console.log("select error", selectError);
-    // setSelectIsTuched(true);
   };
 
   const watchForm = watch();
-  console.log("phone", watchForm.Phone_number)
 
 
 
   const addForm = () => {
     dispatch(resumeActions.addToEducation());
-    // setSelectedId([...selectedId, { value: "" }]);
   };
 
   useEffect(() => {
-    // setSelectedId(educationFormCount.map(() => ({ value: "" })));
     const fetchData = async () => {
       try {
         const response = await axios(degreeUrl);
         setFetchedSelectData(response.data);
-        // const value = JSON.parse(localStorage.getItem("selectedValue"));
-        // const degreeTitle = response.data[value - 1].title;
-        // console.log(value)
-        // if (value) {
-        //   setSelectedId(value);
-          // setSelectedTitle(degreeTitle);
-          // setInvalidSelect(false);
-          // setSelectIsTuched(true);
-        // }
       } catch (error) {
         console.log(error);
       }
@@ -133,21 +104,7 @@ const Experience = () => {
     fetchData();
   }, []);
 
-  const selectChangeHandler = (event, index) => {
-  //   // const degreeTitle = fetchedSelectData[e.target.value - 1].title;
-  //   // setInvalidSelect(false);
-  //   // setSelectIsTuched(true);
-
-  //   // setSelectedTitle(degreeTitle);
-  //   // setSelectedId(value);
-
-  //   const newSelects = [...selectedId];
-  //   newSelects[index].value = event.target.value;
-  //   setSelectedId(newSelects);
-  //   console.log(index);
-
-  //   localStorage.setItem("selectedValue", JSON.stringify(newSelects));
-  };
+  
 
   const inputTriggerHandler = () => {
     trigger();
@@ -157,10 +114,6 @@ const Experience = () => {
     localStorage.clear();
     navigate("/");
   };
-
- 
-
-
 
   return (
     <div className="mt-[45px] ml-[48px] flex">
@@ -374,7 +327,7 @@ const Experience = () => {
           </form>
         </div>
       </section>
-      <Resume watchForm={watchForm}  />
+      <Resume watchForm={watchForm} fetchedSelectData={fetchedSelectData}  />
     </div>
   );
 };
