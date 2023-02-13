@@ -21,7 +21,7 @@ export default function transformObject(obj, degree_id) {
       institute: obj[`institute${i}`],
       description: obj[`educationDescription${i}`],
       due_date: obj[`institute_due_date${i}`],
-      degree_id: degree_id,
+      degree_id: obj[`degree_id${i}`],
     });
   }
 

@@ -52,6 +52,7 @@ const UserPage = () => {
     handleSubmit,
     watch,
     trigger,
+    getValues,
     setValue,
     formState: { dirtyFields, errors, touchedFields, isValidating },
   } = useForm();
@@ -64,8 +65,8 @@ const UserPage = () => {
 
   const watchForm = watch();
 
-  console.log("isValidating", isValidating);
-  console.log("dirtyFields", dirtyFields);
+  // console.log("isValidating", isValidating);
+  // console.log("dirtyFields", dirtyFields);
 
   const onSubmit = () => {
     if (imageError) {
@@ -81,13 +82,13 @@ const UserPage = () => {
     setValue("phone_number", watchForm.phone_number, { shouldDirty: true });
   };
 
-  useEffect(() => {
-    setValue("name", watchForm.name, { shouldDirty: true });
-    setValue("surname", watchForm.surname, { shouldDirty: true });
-    setValue("email", watchForm.email, { shouldDirty: true });
-    setValue("phone_number", watchForm.phone_number, { shouldDirty: true });
-    setValue("file", watchForm.file, { shouldDirty: true });
-  }, []);
+  // useEffect(() => {
+  //   setValue("name", watchForm.name, { shouldDirty: true });
+  //   setValue("surname", watchForm.surname, { shouldDirty: true });
+  //   setValue("email", watchForm.email, { shouldDirty: true });
+  //   setValue("phone_number", watchForm.phone_number, { shouldDirty: true });
+  //   setValue("file", watchForm.file, { shouldDirty: true });
+  // }, []);
 
   const inputTriggerHandler = () => {
     trigger();
@@ -98,6 +99,23 @@ const UserPage = () => {
     navigate("/");
   };
 
+  const formatInputValue = (value) => {
+    if (value) {
+      let newValue = value.replace(/\s/g, "");
+      if (newValue.length >= 1 && newValue[0] !== "+") {
+        newValue = "+" + newValue;
+      }
+      newValue = newValue.replace(
+        /(\d{3})(\d{3})(\d{2})(\d{2})(\d{2})/,
+        "$1 $2 $3 $4 $5"
+      );
+      console.log("newValue", newValue);
+      setValue("phone_number", newValue);
+    }
+  };
+  useEffect(() => {
+    formatInputValue(watchForm.phone_number);
+  }, [watchForm.phone_number]);
   return (
     <div className="mt-[45px] ml-[48px] flex">
       {/* left section///////////  */}
@@ -250,11 +268,11 @@ const UserPage = () => {
               <input
                 {...register("phone_number", {
                   required: true,
-                  pattern: /^\+995[0-9]{9}$/,
+                  pattern: /^(\+995)\s(\d{3})\s(\d{2})\s(\d{2})\s(\d{2})$/,
                 })}
                 className="h-[48px] px-[16px] py-[13px] border-grey border-[1px] border-solid rounded-[4px] focus:outline-[2px] focus:outline-grey  mb-[8px]"
                 type="text"
-                placeholder="+995555123456"
+                placeholder="+995 555 12 34 56"
                 style={borderErrorStyling("phone_number", dirtyFields, errors)}
               />
               <p className="font-light text-sm text-dark">

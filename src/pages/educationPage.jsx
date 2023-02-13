@@ -30,23 +30,24 @@ const Experience = () => {
   const dispatch = useDispatch();
 
   const [fetchedSelectData, setFetchedSelectData] = useState([]);
-  const [selectedId, setSelectedId] = useState([{ value: "" }]);
-  const [selectedTitle, setSelectedTitle] = useState("");
-  const [invalidSelect, setInvalidSelect] = useState(true);
-  const [selectIsTuched, setSelectIsTuched] = useState(false);
+  // const [selectedId, setSelectedId] = useState([{ value: "" }]);
+  // const [selectedTitle, setSelectedTitle] = useState("");
+  // const [invalidSelect, setInvalidSelect] = useState(true);
+  // const [selectIsTuched, setSelectIsTuched] = useState(false);
 
-  const validateSelect = () => {
-    if (selectedId === "") {
-      return true;
-    }
-    return false;
-  };
+  // const validateSelect = () => {
+  //   if (selectedId === "") {
+  //     return true;
+  //   }
+  //   return false;
+  // };
 
   const {
     register,
     handleSubmit,
     watch,
     setValue,
+    getValues,
     trigger,
     formState: { dirtyFields, errors },
   } = useForm();
@@ -58,13 +59,13 @@ const Experience = () => {
   });
 
   const onSubmit = (data) => {
-    // console.log("form sumbited", data);
-    const selectError = validateSelect();
-    setSelectIsTuched(true);
+    console.log("form sumbited", data);
+    // const selectError = validateSelect();
+    // setSelectIsTuched(true);
 
     const imageFromLocalStorage = dataURLToImage("image result");
 
-    const trans = transformObject(data, selectedId);
+    const trans = transformObject(data);
     const allData = { ...trans, ...{ image: imageFromLocalStorage } };
 
     console.log("allData", allData);
@@ -95,33 +96,33 @@ const Experience = () => {
       shouldDirty: true,
     });
     setValue("institute", watchForm.institute, { shouldDirty: true });
-    const selectError = validateSelect();
-    console.log("select error", selectError);
-    setSelectIsTuched(true);
+    // const selectError = validateSelect();
+    // console.log("select error", selectError);
+    // setSelectIsTuched(true);
   };
 
   const watchForm = watch();
 
   const addForm = () => {
     dispatch(resumeActions.addToEducation());
-    setSelectedId([...selectedId, { value: "" }]);
+    // setSelectedId([...selectedId, { value: "" }]);
   };
 
   useEffect(() => {
-    setSelectedId(educationFormCount.map(() => ({ value: "" })));
+    // setSelectedId(educationFormCount.map(() => ({ value: "" })));
     const fetchData = async () => {
       try {
         const response = await axios(degreeUrl);
         setFetchedSelectData(response.data);
-        const value = JSON.parse(localStorage.getItem("selectedValue"));
+        // const value = JSON.parse(localStorage.getItem("selectedValue"));
         // const degreeTitle = response.data[value - 1].title;
-        console.log(value)
-        if (value) {
-          setSelectedId(value);
+        // console.log(value)
+        // if (value) {
+        //   setSelectedId(value);
           // setSelectedTitle(degreeTitle);
           // setInvalidSelect(false);
           // setSelectIsTuched(true);
-        }
+        // }
       } catch (error) {
         console.log(error);
       }
@@ -130,19 +131,19 @@ const Experience = () => {
   }, []);
 
   const selectChangeHandler = (event, index) => {
-    // const degreeTitle = fetchedSelectData[e.target.value - 1].title;
-    // setInvalidSelect(false);
-    // setSelectIsTuched(true);
+  //   // const degreeTitle = fetchedSelectData[e.target.value - 1].title;
+  //   // setInvalidSelect(false);
+  //   // setSelectIsTuched(true);
 
-    // setSelectedTitle(degreeTitle);
-    // setSelectedId(value);
+  //   // setSelectedTitle(degreeTitle);
+  //   // setSelectedId(value);
 
-    const newSelects = [...selectedId];
-    newSelects[index].value = event.target.value;
-    setSelectedId(newSelects);
-    console.log(index);
+  //   const newSelects = [...selectedId];
+  //   newSelects[index].value = event.target.value;
+  //   setSelectedId(newSelects);
+  //   console.log(index);
 
-    localStorage.setItem("selectedValue", JSON.stringify(newSelects));
+  //   localStorage.setItem("selectedValue", JSON.stringify(newSelects));
   };
 
   const inputTriggerHandler = () => {
@@ -153,6 +154,10 @@ const Experience = () => {
     localStorage.clear();
     navigate("/");
   };
+
+ 
+
+
 
   return (
     <div className="mt-[45px] ml-[48px] flex">
@@ -211,16 +216,17 @@ const Experience = () => {
                   {/* select ///////////////////////////////////////////// */}
                   <div className="relative">
                     <select
-                      value={selectedId[index]?.value}
-                      onChange={(e) => selectChangeHandler(e, index)}
+                    {...register(`degree_id${index}`, {required: true})}
+                    
+                      value={getValues(`degree_id${index}`)}
+                      // onChange={(e) => selectChangeHandler(e, index)}
                       className="custom-select w-[371px] h-[48px] px-[16px] py-[13px] border-grey border-[1px] border-solid rounded-[4px] focus:outline-[2px] focus:outline-grey  mb-[8px] mt-[30px] "
-                      style={
-                        selectIsTuched
-                          ? invalidSelect
-                            ? { borderColor: "#E52F2F" }
-                            : { borderColor: "#98E37E" }
-                          : { borderColor: "#BCBCBC" }
-                      }
+                      style={borderErrorStyling(
+                        [`degree_id${index}`],
+                        dirtyFields,
+                        errors
+                      )}
+                      
                     >
                       <option hidden className="select-selected opacity-60 text-xxl">
                         აირჩიეთ ხარისხი
@@ -231,8 +237,8 @@ const Experience = () => {
                         </option>
                       ))}
                     </select>
-                    {selectIsTuched ? (
-                      invalidSelect ? (
+                    {dirtyFields[`degree_id${index}`] ? (
+                      errors[`degree_id${index}`] ? (
                         <img
                           src={errorIcon}
                           className="w-[18px] h-[18px] absolute top-[47px] right-[-30px]"
@@ -365,7 +371,7 @@ const Experience = () => {
           </form>
         </div>
       </section>
-      <Resume watchForm={watchForm} selected={selectedTitle} />
+      <Resume watchForm={watchForm}  />
     </div>
   );
 };
