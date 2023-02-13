@@ -10,7 +10,6 @@ const Resume = ({ watchForm, imageUploaded }) => {
   const expCount = useSelector((state) => state.experienceFormCount);
   const eduCount = useSelector((state) => state.eduCationFormCount);
 
-
   return (
     <div>
       <div className="ml-[200px] flex">
@@ -151,26 +150,27 @@ const Resume = ({ watchForm, imageUploaded }) => {
           </div>
           {/* <img src={bottomLogo} className="w-[42px] mt-[50px]" /> */}
         </div>
-        <div
-          style={
-            !imageUploaded
-              ? getImage
-                ? { display: "block" }
-                : { display: "block" }
-              : getImage
-              ? { display: "block" }
-              : { display: "none" }
-          }
-        >
+        <div>
           {getImage ? (
             <img
               src={getImage}
               className="w-[246px] h-[246px] max-w-[246px] rounded-full object-cover flex-grow-1"
+              id="localstorage"
             />
           ) : (
             <img
+              id="stateimg"
               src={imageUploaded}
               className="w-[246px] h-[246px] max-w-[246px] rounded-full object-cover flex-grow-1"
+              style={
+                !imageUploaded
+                  ? getImage
+                    ? { display: "block" }
+                    : { display: "none" }
+                  : getImage
+                  ? { display: "block" }
+                  : { display: "none" }
+              }
             />
           )}
         </div>

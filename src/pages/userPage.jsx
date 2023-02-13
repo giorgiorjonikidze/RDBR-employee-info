@@ -69,9 +69,6 @@ const UserPage = () => {
 
   const watchForm = watch();
 
-  // console.log("isValidating", isValidating);
-  // console.log("dirtyFields", dirtyFields);
-
   const onSubmit = () => {
     setDirtyImage(true)
     if (imageError) {
