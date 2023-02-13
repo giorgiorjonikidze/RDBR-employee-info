@@ -4,11 +4,12 @@ import bottomLogo from "../assets/images/bottom-logo.svg";
 
 import { useSelector } from "react-redux";
 
-const Resume = ({ watchForm, selected }) => {
+const Resume = ({ watchForm, imageUploaded }) => {
   const getImage = localStorage.getItem("image result");
 
   const expCount = useSelector((state) => state.experienceFormCount);
   const eduCount = useSelector((state) => state.eduCationFormCount);
+
 
   return (
     <div>
@@ -69,7 +70,8 @@ const Resume = ({ watchForm, selected }) => {
                 <div className="mt-[15px]">
                   <div className="flex font-bold mb-[7px]">
                     <p>{watchForm[`position${index}`]}</p>
-                    {watchForm[`employer${index}`] && watchForm[`position${index}`] &&
+                    {watchForm[`employer${index}`] &&
+                    watchForm[`position${index}`] &&
                     watchForm[`position${index}`][
                       watchForm[`position${index}`]?.length - 1
                     ] != "," ? (
@@ -149,10 +151,25 @@ const Resume = ({ watchForm, selected }) => {
           </div>
           {/* <img src={bottomLogo} className="w-[42px] mt-[50px]" /> */}
         </div>
-        <div>
-          {getImage && (
+        <div
+          style={
+            !imageUploaded
+              ? getImage
+                ? { display: "block" }
+                : { display: "block" }
+              : getImage
+              ? { display: "block" }
+              : { display: "none" }
+          }
+        >
+          {getImage ? (
             <img
               src={getImage}
+              className="w-[246px] h-[246px] max-w-[246px] rounded-full object-cover flex-grow-1"
+            />
+          ) : (
+            <img
+              src={imageUploaded}
               className="w-[246px] h-[246px] max-w-[246px] rounded-full object-cover flex-grow-1"
             />
           )}

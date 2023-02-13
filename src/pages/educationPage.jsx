@@ -102,6 +102,9 @@ const Experience = () => {
   };
 
   const watchForm = watch();
+  console.log("phone", watchForm.Phone_number)
+
+
 
   const addForm = () => {
     dispatch(resumeActions.addToEducation());
@@ -308,7 +311,7 @@ const Experience = () => {
                       dirtyFields[`educationDescription${index}`]
                         ? errors[`educationDescription${index}`]
                           ? { color: "#E52F2F" }
-                          : { color: "#98E37E" }
+                          : { color: "#000000" }
                         : { color: "#000000" }
                     }
                   >

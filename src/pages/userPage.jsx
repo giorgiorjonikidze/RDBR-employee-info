@@ -19,6 +19,10 @@ const UserPage = () => {
   const [imageError, setImageError] = useState(false);
   const [dirtyImage, setDirtyImage] = useState(false);
 
+  console.log("imageError", imageError)
+  console.log("dirtyImage", dirtyImage)
+
+
   const [image, setImage] = useState(null);
 
   const navigate = useNavigate();
@@ -30,10 +34,10 @@ const UserPage = () => {
     setDirtyImage(true);
 
     if (file) {
-      setImage(file);
       reader.readAsDataURL(file);
       reader.onloadend = () => {
         localStorage.setItem("image result", reader.result);
+        setImage(reader.result);
       };
     }
   };
@@ -69,10 +73,13 @@ const UserPage = () => {
   // console.log("dirtyFields", dirtyFields);
 
   const onSubmit = () => {
+    setDirtyImage(true)
     if (imageError) {
       navigate("/experience");
     }
   };
+
+
 
   const onError = () => {
     setDirtyImage(true);
@@ -109,7 +116,6 @@ const UserPage = () => {
         /(\d{3})(\d{3})(\d{2})(\d{2})(\d{2})/,
         "$1 $2 $3 $4 $5"
       );
-      console.log("newValue", newValue);
       setValue("phone_number", newValue);
     }
   };
@@ -289,7 +295,7 @@ const UserPage = () => {
           </form>
         </div>
       </section>
-      <Resume watchForm={watchForm} />
+      <Resume watchForm={watchForm} imageUploaded={image}/>
     </div>
   );
 };

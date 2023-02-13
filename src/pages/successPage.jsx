@@ -25,7 +25,7 @@ const SuccessPage = () => {
   };
 
   return (
-    <div className="flex box-border px-[80px] py-[68px] border-solid border-[0.8px] border-black mt-[54px] ml-[549px]">
+    <div className="flex box-border px-[80px] py-[68px] border-solid border-[0.8px] border-black mt-[54px] ml-[549px] mb-[129px]">
       <button
         onClick={returnToHomeHandler}
         className="absolute left-[48px] top-[45px]"

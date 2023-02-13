@@ -28,7 +28,7 @@ export default function transformObject(obj, degree_id) {
   return {
     email: obj.email,
     name: obj.name,
-    phone_number: obj.phone_number,
+    phone_number: obj.phone_number.replace(/\s+/g, ''),
     surname: obj.surname,
     experiences,
     educations,
