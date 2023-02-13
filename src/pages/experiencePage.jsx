@@ -8,8 +8,6 @@ import { resumeActions } from "./../store/store";
 import backArrow from "../assets/images/back-arrow.svg";
 import errorIcon from "../assets/images/icon-error.svg";
 import successIcon from "../assets/images/icon-success.svg";
-import bottomLogo from "../assets/images/bottom-logo.svg";
-
 
 import Resume from "../components/resume";
 
@@ -66,11 +64,7 @@ const Experience = () => {
     navigate("/");
   };
 
-  // useEffect(() => {
-  //   trigger()
-  //   const storageData = JSON.parse(localStorage.getItem("form info"));
-  //   experienceCount?.forEach( index => setValue(`position${index}`, storageData[`position${index}`], { shouldDirty: true }))
-  // }, []);
+
 
   return (
     <div className="mt-[45px] ml-[48px] flex">

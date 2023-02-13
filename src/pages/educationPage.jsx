@@ -4,8 +4,6 @@ import useFormPersist from "react-hook-form-persist";
 import { useNavigate, Link } from "react-router-dom";
 
 import backArrow from "../assets/images/back-arrow.svg";
-import emailIcon from "../assets/images/icon-email.svg";
-import phoneIcon from "../assets/images/icon-phone.svg";
 import errorIcon from "../assets/images/icon-error.svg";
 import successIcon from "../assets/images/icon-success.svg";
 
@@ -24,6 +22,7 @@ import {
 
 const Experience = () => {
   const degreeUrl = "https://resume.redberryinternship.ge/api/degrees";
+  const postUrl = "https://resume.redberryinternship.ge/api/cvs"
   const educationFormCount = useSelector((state) => state.eduCationFormCount);
 
   const navigate = useNavigate();
@@ -48,18 +47,13 @@ const Experience = () => {
   });
 
   const onSubmit = (data) => {
-    console.log("form sumbited", data);
-
     const imageFromLocalStorage = dataURLToImage("image result");
 
-    const trans = transformObject(data);
-    const allData = { ...trans, ...{ image: imageFromLocalStorage } };
-
-    console.log("allData", allData)
-
+    const transformedData = transformObject(data);
+    const allData = { ...transformedData, ...{ image: imageFromLocalStorage } };
     axios({
       method: "post",
-      url: "https://resume.redberryinternship.ge/api/cvs",
+      url: postUrl,
       data: allData,
       headers: {
         "Content-Type": "multipart/form-data",
@@ -103,8 +97,6 @@ const Experience = () => {
     };
     fetchData();
   }, []);
-
-  
 
   const inputTriggerHandler = () => {
     trigger();

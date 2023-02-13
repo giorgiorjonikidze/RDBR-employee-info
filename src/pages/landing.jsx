@@ -7,9 +7,7 @@ import {Link} from "react-router-dom"
 const Landing = () => {
   return (
     <div className="overflow-hidden">
-      {/* <div className="absolute w-[1920px] h-[1080px]"> */}
       <img className="absolute w-[1920px]" src={landingImg} />
-      {/* </div> */}
       <div className=" ">
         <img
           className="relative z-10 pt-[25px] mb-[26px] ml-[70px] inline-block"

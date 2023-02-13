@@ -37,7 +37,6 @@ const store = configureStore({
   ],
 });
 
-// console.log(store.getState());
 
 export const resumeActions = resumeSlice.actions;
 

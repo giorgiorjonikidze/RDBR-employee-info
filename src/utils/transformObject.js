@@ -1,4 +1,4 @@
-export default function transformObject(obj, degree_id) {
+export default function transformObject(obj) {
   const experiences = [];
   const educations = [];
 
