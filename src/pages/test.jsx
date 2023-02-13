@@ -18,7 +18,11 @@ const Test = () => {
     <div>
       <button onClick={handleAddSelect}>Add Select</button>
       {selects.map((select, index) => (
-        <select key={index} value={select.value} onChange={(e) => handleSelectChange(e, index)}>
+        <select
+          key={index}
+          value={select.value}
+          onChange={(e) => handleSelectChange(e, index)}
+        >
           <option value="">Select an option</option>
           <option value="option1">Option 1</option>
           <option value="option2">Option 2</option>

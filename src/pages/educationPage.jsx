@@ -213,7 +213,7 @@ const Experience = () => {
                     <select
                       value={selectedId[index]?.value}
                       onChange={(e) => selectChangeHandler(e, index)}
-                      className="w-[371px] h-[48px] px-[16px] py-[13px] border-grey border-[1px] border-solid rounded-[4px] focus:outline-[2px] focus:outline-grey  mb-[8px] mt-[30px] "
+                      className="custom-select w-[371px] h-[48px] px-[16px] py-[13px] border-grey border-[1px] border-solid rounded-[4px] focus:outline-[2px] focus:outline-grey  mb-[8px] mt-[30px] "
                       style={
                         selectIsTuched
                           ? invalidSelect
@@ -222,11 +222,11 @@ const Experience = () => {
                           : { borderColor: "#BCBCBC" }
                       }
                     >
-                      <option hidden className="opacity-60 text-xxl">
+                      <option hidden className="select-selected opacity-60 text-xxl">
                         აირჩიეთ ხარისხი
                       </option>
                       {fetchedSelectData.map((item) => (
-                        <option key={item.title} value={item.id}>
+                        <option className="select-selected" key={item.title} value={item.id}>
                           {item.title}
                         </option>
                       ))}

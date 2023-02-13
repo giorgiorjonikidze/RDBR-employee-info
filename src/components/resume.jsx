@@ -2,7 +2,6 @@ import emailIcon from "../assets/images/icon-email.svg";
 import phoneIcon from "../assets/images/icon-phone.svg";
 import bottomLogo from "../assets/images/bottom-logo.svg";
 
-import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 
 const Resume = ({ watchForm, selected }) => {

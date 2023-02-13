@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import useFormPersist from "react-hook-form-persist";
 import { useNavigate } from "react-router-dom";
@@ -9,10 +9,17 @@ import backArrow from "../assets/images/back-arrow.svg";
 import errorIcon from "../assets/images/icon-error.svg";
 import successIcon from "../assets/images/icon-success.svg";
 
-import {borderErrorStyling, labelErrorStyling, validationIcon} from "../utils/errorStyling"
+import {
+  borderErrorStyling,
+  labelErrorStyling,
+  validationIcon,
+} from "../utils/errorStyling";
 
 const UserPage = () => {
   const [imageError, setImageError] = useState(false);
+  const [dirtyImage, setDirtyImage] = useState(false);
+
+  const [image, setImage] = useState(null);
 
   const navigate = useNavigate();
 
@@ -20,8 +27,10 @@ const UserPage = () => {
     const file = e.target.files[0];
     const reader = new FileReader();
     setImageError(true);
+    setDirtyImage(true);
 
     if (file) {
+      setImage(file);
       reader.readAsDataURL(file);
       reader.onloadend = () => {
         localStorage.setItem("image result", reader.result);
@@ -29,13 +38,22 @@ const UserPage = () => {
     }
   };
 
+  useEffect(() => {
+    const imageResult = localStorage.getItem("image result");
+    if (imageResult) {
+      setImage(imageResult);
+      setImageError(true);
+      setDirtyImage(true);
+    }
+  }, []);
+
   const {
     register,
     handleSubmit,
     watch,
     trigger,
     setValue,
-    formState: { dirtyFields, errors },
+    formState: { dirtyFields, errors, touchedFields, isValidating },
   } = useForm();
 
   useFormPersist("form info", {
@@ -46,17 +64,30 @@ const UserPage = () => {
 
   const watchForm = watch();
 
+  console.log("isValidating", isValidating);
+  console.log("dirtyFields", dirtyFields);
+
   const onSubmit = () => {
-    navigate("/experience");
+    if (imageError) {
+      navigate("/experience");
+    }
   };
 
   const onError = () => {
+    setDirtyImage(true);
+    setValue("name", watchForm.name, { shouldDirty: true });
+    setValue("surname", watchForm.surname, { shouldDirty: true });
+    setValue("email", watchForm.email, { shouldDirty: true });
+    setValue("phone_number", watchForm.phone_number, { shouldDirty: true });
+  };
+
+  useEffect(() => {
     setValue("name", watchForm.name, { shouldDirty: true });
     setValue("surname", watchForm.surname, { shouldDirty: true });
     setValue("email", watchForm.email, { shouldDirty: true });
     setValue("phone_number", watchForm.phone_number, { shouldDirty: true });
     setValue("file", watchForm.file, { shouldDirty: true });
-  };
+  }, []);
 
   const inputTriggerHandler = () => {
     trigger();
@@ -156,7 +187,7 @@ const UserPage = () => {
                 accept="image/*"
                 onChange={handleFileChange}
               />
-              {dirtyFields.file ? (
+              {dirtyImage ? (
                 !imageError ? (
                   <img src={errorIcon} className="w-[18px] h-[18px] " />
                 ) : (
@@ -223,7 +254,7 @@ const UserPage = () => {
                 })}
                 className="h-[48px] px-[16px] py-[13px] border-grey border-[1px] border-solid rounded-[4px] focus:outline-[2px] focus:outline-grey  mb-[8px]"
                 type="text"
-                placeholder="+995 551 12 34 56"
+                placeholder="+995555123456"
                 style={borderErrorStyling("phone_number", dirtyFields, errors)}
               />
               <p className="font-light text-sm text-dark">
